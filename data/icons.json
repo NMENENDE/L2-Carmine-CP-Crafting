@@ -1,0 +1,30 @@
+{
+  "source": "cuteshaun/lineage2-api",
+  "origin": "Lineage II Interlude client icons",
+  "byName": {
+    "animal bone": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_piece_bone_white_i00.png",
+    "varnish": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_pouch_yellow_i00.png",
+    "iron ore": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_lump_gray_i00.png",
+    "coal": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_coal_i00.png",
+    "stem": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_branch_gold_i00.png",
+    "coarse bone powder": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_powder_white_i00.png",
+    "mithril ore": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_mithril_ore_i00.png",
+    "asofe": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_gem_blue_i00.png",
+    "mold glue": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_reagent_red_i00.png",
+    "cokes": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_oil_pot_black_i00.png",
+    "charcoal": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_charcoal_i00.png",
+    "silver nugget": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_silver_i00.png",
+    "stone of purity": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_crystal_ball_white_i00.png",
+    "braided hemp": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_braided_hemp_i00.png",
+    "mithril alloy": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_lump_white_i00.png",
+    "crystal: b grade": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_crystal_red_i00.png",
+    "crystal (b-grade)": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_crystal_red_i00.png",
+    "gemstone b": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_bead_green_i00.png",
+    "steel": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_lump_black_i00.png",
+    "adena": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/Adena.png"
+  },
+  "byId": {
+    "57": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/Adena.png",
+    "1872": "https://raw.githubusercontent.com/cuteshaun/lineage2-api/main/public/icons/etc_piece_bone_white_i00.png"
+  }
+}
