@@ -182,5 +182,205 @@
         "quantity": 4
       }
     ]
+  },
+  {
+    "name": "Recipe: Sealed Majestic Leather Armor (100%)",
+    "result": "Sealed Majestic Leather Armor",
+    "grade": "A",
+    "craft_level": 8,
+    "success_rate": 1,
+    "mp_cost": 201,
+    "output_quantity": 1,
+    "armor_type": "light",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/sealed-majestic-leather-armor",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 250000
+      },
+      {
+        "name": "Crafted Leather",
+        "quantity": 400
+      },
+      {
+        "name": "Metallic Fiber",
+        "quantity": 200
+      },
+      {
+        "name": "Compound Braid",
+        "quantity": 100
+      },
+      {
+        "name": "Asofe",
+        "quantity": 100
+      },
+      {
+        "name": "Crystal (A-Grade)",
+        "quantity": 87
+      },
+      {
+        "name": "Gemstone A",
+        "quantity": 17
+      },
+      {
+        "name": "Sealed Majestic Leather Armor Fabric",
+        "quantity": 14
+      },
+      {
+        "name": "Arcsmith's Anvil",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Sealed Majestic Leather Armor (60%)",
+    "result": "Sealed Majestic Leather Armor",
+    "grade": "A",
+    "craft_level": 9,
+    "success_rate": 0.6,
+    "mp_cost": 201,
+    "output_quantity": 1,
+    "armor_type": "light",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/sealed-majestic-leather-armor",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 300000
+      },
+      {
+        "name": "Crafted Leather",
+        "quantity": 330
+      },
+      {
+        "name": "Crystal (A-Grade)",
+        "quantity": 210
+      },
+      {
+        "name": "Metallic Fiber",
+        "quantity": 165
+      },
+      {
+        "name": "Gemstone A",
+        "quantity": 84
+      },
+      {
+        "name": "Compound Braid",
+        "quantity": 82
+      },
+      {
+        "name": "Asofe",
+        "quantity": 82
+      },
+      {
+        "name": "Sealed Majestic Leather Armor Fabric",
+        "quantity": 20
+      },
+      {
+        "name": "Arcsmith's Anvil",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Sealed Majestic Robe (100%)",
+    "result": "Sealed Majestic Robe",
+    "grade": "A",
+    "craft_level": 8,
+    "success_rate": 1,
+    "mp_cost": 201,
+    "output_quantity": 1,
+    "armor_type": "robe",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/sealed-majestic-robe",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 250000
+      },
+      {
+        "name": "Crafted Leather",
+        "quantity": 400
+      },
+      {
+        "name": "Metallic Fiber",
+        "quantity": 200
+      },
+      {
+        "name": "Compound Braid",
+        "quantity": 100
+      },
+      {
+        "name": "Asofe",
+        "quantity": 100
+      },
+      {
+        "name": "Crystal (A-Grade)",
+        "quantity": 87
+      },
+      {
+        "name": "Gemstone A",
+        "quantity": 17
+      },
+      {
+        "name": "Sealed Majestic Robe Fabric",
+        "quantity": 14
+      },
+      {
+        "name": "Arcsmith's Anvil",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Sealed Majestic Robe (60%)",
+    "result": "Sealed Majestic Robe",
+    "grade": "A",
+    "craft_level": 9,
+    "success_rate": 0.6,
+    "mp_cost": 201,
+    "output_quantity": 1,
+    "armor_type": "robe",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/sealed-majestic-robe",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 300000
+      },
+      {
+        "name": "Crafted Leather",
+        "quantity": 306
+      },
+      {
+        "name": "Crystal (A-Grade)",
+        "quantity": 210
+      },
+      {
+        "name": "Metallic Fiber",
+        "quantity": 153
+      },
+      {
+        "name": "Gemstone A",
+        "quantity": 84
+      },
+      {
+        "name": "Compound Braid",
+        "quantity": 76
+      },
+      {
+        "name": "Asofe",
+        "quantity": 76
+      },
+      {
+        "name": "Sealed Majestic Robe Fabric",
+        "quantity": 20
+      },
+      {
+        "name": "Arcsmith's Anvil",
+        "quantity": 2
+      }
+    ]
   }
 ]
