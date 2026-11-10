@@ -1,7 +1,7 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const db=createClient('https://exdbjmenogqmdsagtzsc.supabase.co','sb_publishable_aiD4YZk2gx8B1thwWfcB5Q_Zu9Y1UJO');
 const $=id=>document.getElementById(id), q=(el,sel)=>el?.querySelector(sel);
-let goalItems=[],goalSets=[];let data={items:[],recipes:[],sets:[],materials:[]},cursor={catalog:0,recipes:0,sets:0},filters={catalog:'',recipes:'',sets:''},user=null,party=null,balances=[],dbRecipes=[],dbIngredients=[];
+let goalItems=[],goalSets=[],expandedRecipe=null;let data={items:[],recipes:[],sets:[],materials:[]},cursor={catalog:0,recipes:0,sets:0},filters={catalog:'',recipes:'',sets:''},user=null,party=null,balances=[],dbRecipes=[],dbIngredients=[];
 const safe=t=>String(t??''),slug=t=>safe(t).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const css=(el,n)=>el.classList.add(n);
 const node=(tag,value='',cls='')=>{const el=document.createElement(tag);el.textContent=safe(value);if(cls)el.className=cls;return el};
@@ -12,11 +12,12 @@ const typeIcon={material:'⬡',recipe_item:'♜',weapon:'⚔',armor:'♞',jewelr
 async function json(path){try{const r=await fetch(path,{cache:'no-store'});if(!r.ok)return null;return await r.json()}catch{return null}}
 async function paged(table,columns,max=9000){const out=[];for(let start=0;start<max;start+=1000){const {data,error}=await db.from(table).select(columns).range(start,start+999);if(error)break;out.push(...data);if(data.length<1000)break}return out}
 async function syncCatalog(){
- const [a,b,c,d]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json'].map(json));
+ const [a,b,c,d,featured]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json'].map(json));
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
  if(!data.items.length){data.items=await paged('items','id,name,grade,category,icon_url,source_url,verified');}
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
  if(!data.recipes.length){const rows=await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified');data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id),result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
+ if(Array.isArray(featured)){const known=new Set(data.recipes.map(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()));for(const recipe of featured){const k=recipe.name.toLowerCase().replace(/\s+/g,' ').trim();if(!known.has(k)){data.recipes.push(recipe);known.add(k)}else{const idx=data.recipes.findIndex(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()===k);if(idx>=0&&!data.recipes[idx].ingredients?.length)data.recipes[idx]={...data.recipes[idx],...recipe}}}}
  [goalItems,goalSets]=await Promise.all([paged('items','id,name,category'),paged('equipment_sets','id,name')]);
  renderAll();
 }
@@ -38,7 +39,20 @@ function card(obj,kind){
  const item={...obj,category:kind==='sets'?'armor':kind==='recipes'?'recipe_item':obj.category};
  right.append(node('h3',obj.name||obj.result||'Ítem'),node('div',kind==='recipes'?obj.result||'Resultado':kind==='sets'?(obj.armor_type||'Armadura'):obj.category||'Ítem','meta'));head.append(imgIcon(item),right);c.append(head);
  if(kind==='recipes'){
- c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito')+(obj.craft_level?' · Nivel '+obj.craft_level:''),'meta'));
+ c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito')+(obj.craft_level?' · Nivel '+obj.craft_level:'')+(obj.armor_type?' · '+obj.armor_type.toUpperCase():''),'meta'));
+ if(Array.isArray(obj.ingredients)&&obj.ingredients.length){
+   const details=document.createElement('details');details.className='recipe-detail';
+   const summary=node('summary','Ver '+obj.ingredients.length+' materiales necesarios');
+   details.append(summary);
+   let complete=0;const ul=node('div','','source-list');for(const part of obj.ingredients){
+     const name=part.name.replace('Crystal (B-Grade)','Crystal: B Grade').replace('Crystal (A-Grade)','Crystal: A Grade');
+     const match=goalItems.find(i=>i.name?.toLowerCase()===name.toLowerCase()||i.name?.toLowerCase()===part.name.toLowerCase());
+     const qty=match?balances.filter(b=>b.item_id===match.id).reduce((sum,b)=>sum+Number(b.quantity),0):0;
+     if(qty>=part.quantity)complete++;
+     const item=node('div',part.name+' — necesario '+fmt(part.quantity)+' · en CP '+fmt(qty)+(qty<part.quantity?' · faltan '+fmt(part.quantity-qty):' · completo'),'recipe-ingredient');
+     ul.append(item);
+   }details.append(ul,node('small',complete+' / '+obj.ingredients.length+' tipos cubiertos','muted'));c.append(details)
+ }
  if(obj.id){
   const parts=dbIngredients.filter(x=>x.recipe_id===obj.id);
   if(parts.length){const box=node('div','','source-list');for(const part of parts){const name=goalItems.find(i=>i.id===part.item_id)?.name||'Ítem '+part.item_id;const quantity=balances.filter(b=>b.item_id===part.item_id).reduce((s,b)=>s+Number(b.quantity),0);box.append(node('span',name+' ×'+fmt(part.quantity)+' · CP: '+fmt(quantity)))}c.append(box)}
@@ -55,6 +69,11 @@ function card(obj,kind){
  return c
 }
 function mount(id){const host=$(id);if(!host)return null;const shell=node('div','','panel'),bar=node('div','','premium-toolbar'),search=document.createElement('input');search.placeholder=id==='catalog'?'Buscar entre todos los ítems…':id==='recipes'?'Buscar receta o resultado…':'Buscar set o armadura…';search.value=filters[id];bar.append(search);
+ if(id==='recipes'){
+ const select=document.createElement('select');select.id='premium-recipe-kind';
+ for(const [v,t] of [['','Todas las recetas'],['armor','Armaduras y sets'],['weapon','Armas'],['material','Materiales']]){const opt=node('option',t);opt.value=v;select.append(opt)}
+ bar.append(select);select.onchange=()=>{cursor.recipes=0;paint('recipes')}
+}
  if(id==='catalog'){const select=document.createElement('select');select.id='premium-category';for(const [v,t] of [['','Todas las categorías'],['material','Materiales'],['weapon','Armas'],['armor','Armaduras'],['jewelry','Joyas'],['recipe_item','Recetas'],['scroll','Scrolls'],['potion','Pociones'],['shot','Shots y flechas'],['spellbook','Spellbooks']]){const opt=node('option',t);opt.value=v;select.append(opt)}bar.append(select);select.onchange=()=>{cursor.catalog=0;paint('catalog')}}else if(id==='sets'){const select=document.createElement('select');select.id='premium-grade';for(const v of ['Todos los grados','S','A','B','C','D','NG']){const o=node('option',v);o.value=v==='Todos los grados'?'':v;select.append(o)}bar.append(select);select.onchange=()=>{cursor.sets=0;paint('sets')}}
  const counter=node('div','','small muted'),grid=node('div','','premium-grid'),foot=node('div','','premium-footer');
  shell.append(node('h2',id==='catalog'?'Catálogo LU4':id==='recipes'?'Recetas de crafting':'Sets de armaduras'),bar,counter,grid,foot);host.append(shell);
@@ -62,7 +81,12 @@ function mount(id){const host=$(id);if(!host)return null;const shell=node('div',
 }
 const containers={};
 function paint(id){
- const arr=data[id==='catalog'?'items':id]||[];let filtered=arr.filter(x=>{const str=[x.name,x.result,x.grade,x.armor_type,x.category].join(' ').toLocaleLowerCase();if(filters[id]&&!str.includes(filters[id]))return false;if(id==='catalog'&&$('premium-category')?.value&&x.category!==$('premium-category').value)return false;if(id==='sets'&&$('premium-grade')?.value&&x.grade!==$('premium-grade').value)return false;return true});
+ const arr=data[id==='catalog'?'items':id]||[];let filtered=arr.filter(x=>{const str=[x.name,x.result,x.grade,x.armor_type,x.category].join(' ').toLocaleLowerCase();if(filters[id]&&!str.includes(filters[id]))return false;if(id==='recipes'&&$('premium-recipe-kind')?.value){
+  const kind=$('premium-recipe-kind').value;const text=(x.result||x.name||'').toLowerCase();
+  const category=x.kind||(/^recipe:/.test(text)&&(/armor|boots|gloves|helmet|gaiters|robe|leather|shield|circlet|tunic|stockings/.test(text))?'armor':/bow|sword|dagger|staff|mace|spear|blade|axe|lance|fist|hammer/.test(text)?'weapon':'material');
+  if(category!==kind)return false;
+ }
+ if(id==='catalog'&&$('premium-category')?.value&&x.category!==$('premium-category').value)return false;if(id==='sets'&&$('premium-grade')?.value&&x.grade!==$('premium-grade').value)return false;return true});
  const limit=60;cursor[id]=Math.max(0,Math.min(cursor[id],Math.max(0,Math.ceil(filtered.length/limit)-1)));const start=cursor[id]*limit;const h=containers[id];if(!h)return;h.grid.replaceChildren();h.foot.replaceChildren();
  for(const obj of filtered.slice(start,start+limit))h.grid.append(card(obj,id));if(!filtered.length)h.grid.append(node('div','No se encontraron resultados.','premium-empty'));
  h.counter.textContent=fmt(filtered.length)+' resultados · Página '+(cursor[id]+1)+' de '+Math.max(1,Math.ceil(filtered.length/limit));
