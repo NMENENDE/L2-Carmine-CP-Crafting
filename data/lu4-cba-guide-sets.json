@@ -1,0 +1,660 @@
+[
+  {
+    "name": "Chain Mail Set",
+    "grade": "C",
+    "armor_type": "heavy",
+    "primary_item": "Chain Mail Shirt",
+    "set_bonus": "DEX +2 · P. Def. +6% · Con escudo: HP +198",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Chain Mail Shirt",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Chain Gaiters",
+        "optional": false
+      },
+      {
+        "slot": "Casco",
+        "name": "Chain Hood",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Chain Gauntlets",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Chain Boots",
+        "optional": false
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Chain Shield",
+        "optional": true
+      }
+    ]
+  },
+  {
+    "name": "Dwarven Chain Set",
+    "grade": "C",
+    "armor_type": "heavy",
+    "primary_item": "Dwarven Chain Mail Shirt",
+    "set_bonus": "CON +3 · Con escudo: reflejo de todo daño +5%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Dwarven Chain Mail Shirt",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Dwarven Chain Gaiters",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Dwarven Chain Gauntlets",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Dwarven Chain Boots",
+        "optional": false
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Dwarven Chain Shield",
+        "optional": true
+      }
+    ]
+  },
+  {
+    "name": "Composite Set",
+    "grade": "C",
+    "armor_type": "heavy",
+    "primary_item": "Composite Armor",
+    "set_bonus": "M. Def. +7% · Peso +5.795 · Con escudo: resistencia a daño mágico +3",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Armadura completa",
+        "name": "Composite Armor",
+        "optional": false
+      },
+      {
+        "slot": "Casco",
+        "name": "Composite Helmet",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Composite Gauntlets",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Composite Boots",
+        "optional": false
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Composite Shield",
+        "optional": true
+      }
+    ]
+  },
+  {
+    "name": "Full Plate",
+    "grade": "C",
+    "armor_type": "heavy",
+    "primary_item": "Full Plate Armor",
+    "set_bonus": "STR +1 · HP +270 · Vampiric Rage +4% · Con escudo: Shield Defense +12%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Armadura completa",
+        "name": "Full Plate Armor",
+        "optional": false
+      },
+      {
+        "slot": "Casco",
+        "name": "Full Plate Helmet",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Full Plate Gauntlets",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Full Plate Boots",
+        "optional": false
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Full Plate Shield",
+        "optional": true
+      }
+    ]
+  },
+  {
+    "name": "Reinforced Mithril Set",
+    "grade": "C",
+    "armor_type": "light",
+    "primary_item": "Reinforced Mithril Shirt",
+    "set_bonus": "Evasión +4 · Evasión de habilidades físicas/mágicas +4% · Velocidad +3",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Reinforced Mithril Shirt",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Reinforced Mithril Gaiters",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Reinforced Mithril Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Reinforced Mithril Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Plated Leather Set",
+    "grade": "C",
+    "armor_type": "light",
+    "primary_item": "Plated Leather Shirt",
+    "set_bonus": "STR +4 · CON −1",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Plated Leather Shirt",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Plated Leather Gaiters",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Plated Leather Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Plated Leather Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Rind Leather Set",
+    "grade": "C",
+    "armor_type": "light",
+    "primary_item": "Rind Leather Armor",
+    "set_bonus": "STR +2 · Velocidad de ataque +4%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Rind Leather Armor",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Rind Leather Gaiters",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Rind Leather Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Rind Leather Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Theca Leather Set",
+    "grade": "C",
+    "armor_type": "light",
+    "primary_item": "Theca Leather Armor",
+    "set_bonus": "DEX +2 · P. Def. +6%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Theca Leather Armor",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Theca Leather Gaiters",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Theca Leather Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Theca Leather Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Drake Leather Set",
+    "grade": "C",
+    "armor_type": "light",
+    "primary_item": "Drake Leather Armor",
+    "set_bonus": "DEX +2 · M. Def. +7%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Armadura completa",
+        "name": "Drake Leather Armor",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Drake Leather Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Drake Leather Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Karmian Set",
+    "grade": "C",
+    "armor_type": "robe",
+    "primary_item": "Karmian Tunic",
+    "set_bonus": "P. Def. +6% · Velocidad de casteo +15%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Túnica",
+        "name": "Karmian Tunic",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Karmian Stockings",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Karmian Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Karmian Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Set of Seal",
+    "grade": "C",
+    "armor_type": "robe",
+    "primary_item": "Robe of Seal",
+    "set_bonus": "M. Def. +6% · Velocidad de casteo +15%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Robe completo",
+        "name": "Robe of Seal",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Gloves of Seal",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Boots of Seal",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Demon's Set",
+    "grade": "C",
+    "armor_type": "robe",
+    "primary_item": "Demon's Tunic",
+    "set_bonus": "INT +4 · MEN −1 · Sin penalización WIT · Crítico mágico +25% · HP −270",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Túnica",
+        "name": "Demon's Tunic",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Demon's Stockings",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Demon's Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Demon's Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Divine Set",
+    "grade": "C",
+    "armor_type": "robe",
+    "primary_item": "Divine Tunic",
+    "set_bonus": "WIT +2 · INT −2 · P. Def. +6% · Regen MP +1,4 · Curación +50 · MP +175",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": [
+      {
+        "slot": "Túnica",
+        "name": "Divine Tunic",
+        "optional": false
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Divine Stockings",
+        "optional": false
+      },
+      {
+        "slot": "Guantes",
+        "name": "Divine Gloves",
+        "optional": false
+      },
+      {
+        "slot": "Botas",
+        "name": "Divine Boots",
+        "optional": false
+      }
+    ]
+  },
+  {
+    "name": "Avadon Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "primary_item": "Avadon Breastplate",
+    "set_bonus": "CON +1 · HP +300 · M. Def. +8% · Resistencia mental +30% · Con escudo: Shield Defense +16%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Avadon Light",
+    "grade": "B",
+    "armor_type": "light",
+    "primary_item": "Avadon Leather Armor",
+    "set_bonus": "DEX +1 · Peso +5.795 · M. Def. +8% · Resistencia mental +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Avadon Robe",
+    "grade": "B",
+    "armor_type": "robe",
+    "primary_item": "Avadon Robe",
+    "set_bonus": "Velocidad de casteo +15% · P. Def. +6% · Resistencia mental +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Zubei Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "primary_item": "Zubei's Breastplate",
+    "set_bonus": "STR +1 · HP +300 · P. Def. +6% · Reflect Damage +5% · Parálisis/Medusa +30% · Con escudo: Shield Defense +16%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Zubei Light",
+    "grade": "B",
+    "armor_type": "light",
+    "primary_item": "Zubei's Leather Shirt",
+    "set_bonus": "STR +1 · Evasión +4 · Velocidad de ataque +6% · Parálisis/Medusa +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Zubei Robe",
+    "grade": "B",
+    "armor_type": "robe",
+    "primary_item": "Tunic of Zubei",
+    "set_bonus": "INT +1 · M. Atk. +15% · Velocidad de casteo +5% · Parálisis/Medusa +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Blue Wolf Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "primary_item": "Blue Wolf Breastplate",
+    "set_bonus": "STR +3 · CON −1 · DEX −2 · Velocidad +7 · Regen HP +5,26% · Resistencia Stun +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Blue Wolf Light",
+    "grade": "B",
+    "armor_type": "light",
+    "primary_item": "Blue Wolf Leather Armor",
+    "set_bonus": "MEN +3 · INT −2 · Sin penalización WIT · Velocidad de casteo +15% · P. Def. +6% · Resistencia Stun +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Blue Wolf Robe",
+    "grade": "B",
+    "armor_type": "robe",
+    "primary_item": "Blue Wolf Tunic",
+    "set_bonus": "WIT +3 · INT −2 · Sin penalización MEN · MP +210 · Regen MP +16% · Resistencia Stun +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Doom Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "primary_item": "Doom Plate Armor",
+    "set_bonus": "CON +3 sin reducir STR · HP +350 · Breath +200 · Sleep/Hold +30% · Con escudo: Shield Defense +20%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Doom Light",
+    "grade": "B",
+    "armor_type": "light",
+    "primary_item": "Leather Armor of Doom",
+    "set_bonus": "DEX +3 sin reducir STR/CON · P. Atk. +4% · Regen MP +16% · Breath +200 · Veneno +20% · Sleep/Hold +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Doom Robe",
+    "grade": "B",
+    "armor_type": "robe",
+    "primary_item": "Tunic of Doom",
+    "set_bonus": "INT +3 · MEN +1 sin reducir WIT · Regen MP +20% · Velocidad +7 · Breath +200 · Sleep/Hold +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Tallum Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "primary_item": "Tallum Plate Armor",
+    "set_bonus": "STR +2 sin reducir CON · Velocidad de ataque +8% · Peso +6.800 · Veneno/Sangrado +80% · Resistencia mental +50%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Tallum Light",
+    "grade": "A",
+    "armor_type": "light",
+    "primary_item": "Tallum Leather Armor",
+    "set_bonus": "MEN +2 · DEX +1 sin reducir WIT · Casteo +15% · Hit Time −8% · MP +360 · Regen MP +20% · Veneno/Sangrado +80% · Mental +50%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Tallum Robe",
+    "grade": "A",
+    "armor_type": "robe",
+    "primary_item": "Tallum Tunic",
+    "set_bonus": "WIT +2 · INT −2 · M. Def. +8% · Casteo +15% · Velocidad +7 · Veneno/Sangrado +80% · Mental +50%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Dark Crystal Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "primary_item": "Dark Crystal Breastplate",
+    "set_bonus": "CON +2 · DEX +1 sin reducir STR · Casteo +15% · Curación recibida +8% · Regen MP +20% · Parálisis +50% · Medusa +30% · Con escudo: Shield Defense +24%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Dark Crystal Light",
+    "grade": "A",
+    "armor_type": "light",
+    "primary_item": "Dark Crystal Leather Armor",
+    "set_bonus": "STR +1 · DEX +1 sin reducir CON · Velocidad de ataque +4% · P. Atk. +4% · Parálisis +50% · Medusa +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Dark Crystal Robe",
+    "grade": "A",
+    "armor_type": "robe",
+    "primary_item": "Dark Crystal Robe",
+    "set_bonus": "WIT +2 · MEN −2 · P. Def. +8% · Casteo +15% · Velocidad +7 · Cancel Damage −50 · Parálisis +50% · Medusa +30%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Nightmare Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "primary_item": "Armor of Nightmare",
+    "set_bonus": "CON +2 · MEN +1 sin reducir DEX · HP +380 · P. Def. +6% · M. Def. +6% · Sleep/Hold +70% · Con escudo: refleja todo daño +5%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Nightmare Light",
+    "grade": "A",
+    "armor_type": "light",
+    "primary_item": "Leather Armor of Nightmare",
+    "set_bonus": "DEX +2 sin reducir CON · M. Def. +8% · Evasión de habilidades físicas +5% · Vampiric Rage +3% · Sleep/Hold +70%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Nightmare Robe",
+    "grade": "A",
+    "armor_type": "robe",
+    "primary_item": "Robe of Nightmare",
+    "set_bonus": "INT +2 sin reducir WIT · M. Atk. +15% · Casteo +5% · Daño crítico mágico +15% · Sleep/Hold +70%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Majestic Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "primary_item": "Majestic Plate Armor",
+    "set_bonus": "STR +2 sin reducir CON · P. Atk. +8% · Accuracy +5 · Resistencia Stun +50%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Majestic Light",
+    "grade": "A",
+    "armor_type": "light",
+    "primary_item": "Majestic Leather Armor",
+    "set_bonus": "DEX +2 sin reducir CON · Ataque con arco +8% · MP +360 · Peso +6.800 · Resistencia Stun +50%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  },
+  {
+    "name": "Majestic Robe",
+    "grade": "A",
+    "armor_type": "robe",
+    "primary_item": "Majestic Robe",
+    "set_bonus": "MEN +2 · INT −2 · Casteo +15% · MP +360 · Consumo MP de habilidades −4% · Regen MP +24% · Resistencia Stun +50%",
+    "source_url": "https://la2wiki.com/es/lu4/guide/cba-grade-sets-bonuses",
+    "guide_verified": true,
+    "parts": []
+  }
+]
