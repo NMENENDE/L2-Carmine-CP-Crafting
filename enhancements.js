@@ -187,7 +187,24 @@ async function syncGoals(){if(!user||!party||!$('goals'))return;if(!$('goals')._
  const list=$('goals')._list;list.replaceChildren();if(!goals?.length){list.append(node('div','Todavía no hay objetivos registrados.','premium-empty'));return}
  for(const g of goals){const box=node('div','','premium-box'),top=node('div','','goal-title');top.append(node('h3',g.title),node('span',g.status||'Activo','tag'));box.append(top);
  if(g.target_item_id){const recipe=dbRecipes.find(r=>r.output_item_id===g.target_item_id&&r.verified);if(recipe){const ingredients=dbIngredients.filter(i=>i.recipe_id===recipe.id);let ok=0,needed=0;for(const ing of ingredients){const owned=balances.filter(b=>b.item_id===ing.item_id).reduce((s,b)=>s+Number(b.quantity),0);const available=Math.min(owned,ing.quantity);ok+=available;needed+=Number(ing.quantity);const item=data.items.find(i=>i.id===ing.item_id);box.append(node('div',(item?.name||'Ítem '+ing.item_id)+' · '+fmt(owned)+' / '+fmt(ing.quantity),'small muted'))}if(needed){const meter=node('div','','meter'),bar=node('span');bar.style.width=Math.round(100*ok/needed)+'%';meter.append(bar);box.append(meter,node('div',Math.round(100*ok/needed)+'% de ingredientes disponibles','small'))}else box.append(node('div','Receta sin ingredientes cargados.','muted small'))}else box.append(node('div','Objetivo registrado. Consultá la ficha del ítem para su receta.','muted small'))}
- if(g.target_set_id)box.append(node('div','Set en seguimiento. Las piezas se vinculan al completar el catálogo.','muted small'));
+ if(g.target_set_id){
+  const set=goalSets.find(x=>x.id===g.target_set_id);
+  box.append(node('div','Piezas del set '+(set?.name||'seleccionado'),'small muted'));
+  const {data:parts,error:partsError}=await db.from('set_pieces').select('item_id,required_quantity').eq('set_id',g.target_set_id);
+  if(partsError)box.append(node('div','No se pudo leer la composición del set.','muted small'));
+  else if(!parts?.length)box.append(node('div','Las piezas de este set aún no están disponibles.','muted small'));
+  else {
+    let complete=0;
+    for(const part of parts){
+      const item=goalItems.find(x=>x.id===part.item_id);
+      const owned=balances.filter(b=>b.item_id===part.item_id).reduce((n,b)=>n+Number(b.quantity),0);
+      if(owned>=part.required_quantity)complete++;
+      box.append(node('div',(item?.name||'Pieza '+part.item_id)+' · CP: '+fmt(owned)+' / '+fmt(part.required_quantity)+(owned>=part.required_quantity?' ✓':' · faltan '+fmt(part.required_quantity-owned)),'small muted'));
+    }
+    const meter=node('div','','meter'),fill=node('span');fill.style.width=Math.round(100*complete/parts.length)+'%';meter.append(fill);
+    box.append(meter,node('div',complete+' / '+parts.length+' piezas disponibles','small'));
+  }
+ }
  list.append(box)
  }
 }
