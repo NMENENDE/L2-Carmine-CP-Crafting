@@ -214,7 +214,7 @@ async function syncGoals(){if(!user||!party||!$('goals'))return;if(!$('goals')._
  list.append(box)
  }
 }
-async function syncInventory(){if(!user||!party)return;const {data:locs}=await db.from('inventory_locations').select('id,name,owner_user_id').eq('party_id',party);if(!locs?.some(l=>l.owner_user_id===user.id)){const {error}=await db.from('inventory_locations').insert({party_id:party,owner_user_id:user.id,name:'Inventario de '+(user.email?.split('@')[0]||'personaje'),location_type:'personal'});if(error)message('Ubicación: '+error.message)}
+async function syncInventory(){if(!user||!party)return;const {data:locs}=await db.from('inventory_locations').select('id,name,owner_user_id').eq('party_id',party);if(!locs?.some(l=>l.owner_user_id===user.id)){const {error}=await db.from('inventory_locations').insert({party_id:party,owner_user_id:user.id,name:'Inventario personal',location_type:'personal'});if(error)message('Ubicación: '+error.message)}
  const {data:bals}=await db.from('inventory_balances').select('item_id,quantity,location_id').eq('party_id',party);balances=bals||[];
 }
 function message(s){const n=$('notice');if(!n)return;n.textContent=s;n.style.display='block';setTimeout(()=>n.style.display='none',4000)}
