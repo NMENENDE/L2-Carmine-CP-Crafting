@@ -35,7 +35,7 @@ function card(obj,kind){
  c.append(foot);
  return c
 }
-function mount(id){const host=$(id);if(!host)return null;host.replaceChildren();const shell=node('div','','panel'),bar=node('div','','premium-toolbar'),search=document.createElement('input');search.placeholder=id==='catalog'?'Buscar entre todos los ítems…':id==='recipes'?'Buscar receta o resultado…':'Buscar set o armadura…';search.value=filters[id];bar.append(search);
+function mount(id){const host=$(id);if(!host)return null;const shell=node('div','','panel'),bar=node('div','','premium-toolbar'),search=document.createElement('input');search.placeholder=id==='catalog'?'Buscar entre todos los ítems…':id==='recipes'?'Buscar receta o resultado…':'Buscar set o armadura…';search.value=filters[id];bar.append(search);
  if(id==='catalog'){const select=document.createElement('select');select.id='premium-category';for(const [v,t] of [['','Todas las categorías'],['material','Materiales'],['weapon','Armas'],['armor','Armaduras'],['jewelry','Joyas'],['recipe_item','Recetas'],['scroll','Scrolls'],['potion','Pociones'],['shot','Shots y flechas'],['spellbook','Spellbooks']]){const opt=node('option',t);opt.value=v;select.append(opt)}bar.append(select);select.onchange=()=>{cursor.catalog=0;paint('catalog')}}else if(id==='sets'){const select=document.createElement('select');select.id='premium-grade';for(const v of ['Todos los grados','S','A','B','C','D','NG']){const o=node('option',v);o.value=v==='Todos los grados'?'':v;select.append(o)}bar.append(select);select.onchange=()=>{cursor.sets=0;paint('sets')}}
  const counter=node('div','','small muted'),grid=node('div','','premium-grid'),foot=node('div','','premium-footer');
  shell.append(node('h2',id==='catalog'?'Catálogo LU4':id==='recipes'?'Recetas de crafting':'Sets de armaduras'),bar,counter,grid,foot);host.append(shell);
@@ -49,8 +49,8 @@ function paint(id){
  h.counter.textContent=fmt(filtered.length)+' resultados · Página '+(cursor[id]+1)+' de '+Math.max(1,Math.ceil(filtered.length/limit));
  const back=button('← Anterior',()=>{cursor[id]--;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});back.disabled=cursor[id]===0;const next=button('Siguiente →',()=>{cursor[id]++;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});next.disabled=start+limit>=filtered.length;h.foot.append(back,next)
 }
-function renderAll(){for(const id of ['catalog','recipes','sets']){if(!containers[id])containers[id]=mount(id);paint(id)}}
-async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user)return;const {data:members}=await db.from('party_members').select('party_id').eq('user_id',user.id).limit(1);party=members?.[0]?.party_id||null;await Promise.all([syncGoals(),syncInventory()])}
+function renderAll(){for(const id of ['catalog','recipes','sets']){if(!containers[id])containers[id]=mount(id);paint(id)}goalsUI()}
+async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user)return;const {data:members}=await db.from('party_members').select('party_id').eq('user_id',user.id).limit(1);party=members?.[0]?.party_id||null;await syncInventory();await syncGoals()}
 function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();const panel=node('section','','panel'),h=node('h2','Objetivos de crafteo de la CP'),form=document.createElement('form'),row=node('div','','premium-toolbar'),target=document.createElement('select'),title=document.createElement('input'),priority=document.createElement('select'),submit=node('button','Crear objetivo','primary');submit.type='submit';title.placeholder='Nombre del objetivo';title.required=true;
  const first=node('option','Elegir objetivo: ítem o set');first.value='';target.append(first);
  for(const obj of data.items.filter(i=>['weapon','armor','material'].includes(i.category)).slice(0,2000)){const o=node('option',obj.name);o.value='item:'+obj.id;target.append(o)}
@@ -75,7 +75,7 @@ function boot(){
  const nav=document.querySelector('.nav');if(nav){const a=button('✧   Objetivos',()=>openExtra('goals'));a.dataset.extra='goals';const b=button('◈   Drop y Spoil',()=>openExtra('farming'));b.dataset.extra='farming';nav.append(a,b);nav.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{nav.querySelectorAll('[data-extra]').forEach(x=>x.classList.remove('active'))}))}
  document.querySelectorAll('[data-extra]').forEach(x=>x.addEventListener('click',()=>openExtra(x.dataset.extra)));
  // Hide the older raw tables in favour of the premium catalogue component.
- for(const id of ['catalog','recipes','sets']){const host=$(id);if(host)host.replaceChildren()}
+ for(const id of ['catalog','recipes','sets']){const host=$(id);if(host){const legacy=node('div','','hide');while(host.firstChild)legacy.append(host.firstChild);host.append(legacy)}}
  renderAll();goalsUI();syncCatalog();
  db.auth.onAuthStateChange(()=>setTimeout(sessionState,500));sessionState()
 }
