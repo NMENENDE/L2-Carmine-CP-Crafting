@@ -35,7 +35,7 @@ function vectorIcon(item){
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 48 48');svg.setAttribute('width','36');svg.setAttribute('height','36');svg.setAttribute('aria-hidden','true');
  const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','assets/icons.svg#'+key);svg.append(use);return svg;
 }
-function imgIcon(item){const icon=node('div','', 'premium-icon'),url=data.icons?.byId?.[String(item.game_item_id||item.id||'')]||data.icons?.byName?.[safe(item.name||item.result).trim().toLowerCase().replace(/\s+/g,' ')]||item.icon_url||item.image_url;if(url&&/^https:\/\//.test(url)){const image=document.createElement('img');image.src=url;image.loading='lazy';image.alt='';image.onerror=()=>{icon.replaceChildren(vectorIcon(item))};icon.append(image)}else{icon.append(vectorIcon(item))}return icon}
+function imgIcon(item){const icon=node('div','', 'premium-icon'),url=data.icons?.byId?.[String(item.game_item_id||'')]||data.icons?.byName?.[safe(item.name||item.result).trim().toLowerCase().replace(/\s+/g,' ')]||item.icon_url||item.image_url;if(url&&/^https:\/\//.test(url)){const image=document.createElement('img');image.src=url;image.loading='lazy';image.alt='';image.onerror=()=>{icon.replaceChildren(vectorIcon(item))};icon.append(image)}else{icon.append(vectorIcon(item))}return icon}
 function card(obj,kind){
  const c=node('article','','premium-card'),head=node('div','','premium-head'),right=node('div');
  const item={...obj,category:kind==='sets'?'armor':kind==='recipes'?'recipe_item':obj.category};
