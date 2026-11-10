@@ -3,6 +3,7 @@
 import json
 import re
 import time
+from collections import deque
 import urllib.parse
 import urllib.robotparser
 from pathlib import Path
@@ -84,27 +85,44 @@ for a in index.select("a[href]"):
     elif "accessor" in title:categories[url]="accessory"
     elif "quest item" in title:categories[url]="quest"
 items={x["source_url"]:x for x in materials}
-for url,category in sorted(categories.items()):
-    if url==BASE+"/lu4/items": continue
-    try:
-        soup=fetch(url)
-        for x in entries_from_table(soup,category,category):
-            items.setdefault(x["source_url"],x)
-    except Exception as e:
-        print("Category skipped",url,str(e))
+for first_url,category in sorted(categories.items()):
+    if first_url==BASE+"/lu4/items":continue
+    seen=set()
+    queue=deque([first_url])
+    while queue and len(seen)<70:
+        url=queue.popleft()
+        if url in seen:continue
+        seen.add(url)
+        try:
+            soup=fetch(url)
+            for x in entries_from_table(soup,category,category):
+                items.setdefault(x["source_url"],x)
+            root=urllib.parse.urlsplit(first_url).path.rstrip("/")
+            for a in soup.select("a[href]"):
+                href=source_link(a)
+                if href and href not in seen:
+                    path=urllib.parse.urlsplit(href).path.rstrip("/")
+                    if path.startswith(root+"/page-") and href not in queue:queue.append(href)
+        except Exception as e:
+            print("Category skipped",url,str(e))
 # Item coverage reflects successfully parsed pages, not claimed full reference counts.
 save("items.json",sorted(items.values(),key=lambda x:(x["category"],x["name"].lower())))
 
-# Recipe index has 4 sections and category detail pages.
+# Recipe catalogue and paginated category lists.
 home=fetch("/lu4/recipes")
 recipepages={"/lu4/recipes"}
 for a in home.select("a[href]"):
     title=clean(a).lower()
     url=source_link(a)
     if url and ("recipes" in title or title.startswith("show all")):
-        if "/recipes" in urllib.parse.urlsplit(url).path: recipepages.add(url)
+        if "/recipes" in urllib.parse.urlsplit(url).path:recipepages.add(url)
 recipes={}
-for page_url in sorted(recipepages):
+queue=deque(sorted(recipepages))
+seen=set()
+while queue and len(seen)<100:
+    page_url=queue.popleft()
+    if page_url in seen:continue
+    seen.add(page_url)
     try:
         soup = home if page_url=="/lu4/recipes" else fetch(page_url)
         for table in soup.select("table"):
@@ -123,7 +141,14 @@ for page_url in sorted(recipepages):
                 try:level=int(clean(cells[3]))
                 except:level=None
                 recipes[url]={"name":clean(a),"result":clean(cells[1]),"output_source_url":source_link(result) if result else None,"grade":grade,"craft_level":level,"success_rate":rate,"source_url":url,"ingredients":None,"source":"La2Wiki LU4"}
-    except Exception as e: print("Recipes page skipped",page_url,str(e))
+        path=urllib.parse.urlsplit(page_url).path.rstrip("/")
+        root=path.split("/page-")[0]
+        for a in soup.select("a[href]"):
+            href=source_link(a)
+            if not href or href in seen or href in queue:continue
+            newpath=urllib.parse.urlsplit(href).path.rstrip("/")
+            if newpath.startswith(root+"/page-"):queue.append(href)
+    except Exception as e:print("Recipes page skipped",page_url,str(e))
 save("recipes.json",list(recipes.values()))
 
 sets={}
@@ -138,4 +163,4 @@ for p in range(1,6):
                 sets[link]={"name":name,"source_url":link,"source":"La2Wiki LU4"}
     except Exception as e:print("Sets page skipped",url,str(e))
 save("sets.json",list(sets.values()))
-save("summary.json",{"materials":len(materials),"items":len(items),"recipes":len(recipes),"sets":len(sets),"source":"La2Wiki LU4","icons_copied":0,"ingredients_imported":0})
+save("summary.json",{"materials":len(materials),"items":len(items),"recipes":len(recipes),"sets":len(sets),"source":"La2Wiki LU4","icons_copied":0,"ingredients_imported":0,"expected":{"items":6084,"materials":818,"recipes":995,"sets":149},"complete":{"materials":len(materials)==818,"items":len(items)==6084,"recipes":len(recipes)==995,"sets":len(sets)==149}})
