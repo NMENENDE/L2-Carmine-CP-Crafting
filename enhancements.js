@@ -67,7 +67,11 @@ function jewelryCard(obj){
  const info=node('div','','set-description');
  info.append(node('span','M. Def. '+obj.magic_defense+' · Grado '+obj.grade));
  const rec=data.recipes.find(r=>r.result?.toLowerCase()===obj.name.toLowerCase()&&r.kind==='jewelry');
- if(obj.epic){info.append(node('strong',' · ÉPICA','epic-label'))}c.append(info);
+ if(obj.epic){info.append(node('strong',' · ÉPICA','epic-label'))}
+ if(obj.mp_bonus!=null)info.append(node('span',' · MP +'+obj.mp_bonus,'meta'));
+ c.append(info);
+ if(Array.isArray(obj.effects)&&obj.effects.length){const details=document.createElement('details');details.className='recipe-detail';details.append(node('summary','Ver '+obj.effects.length+' bonus especiales'));const list=node('div','','source-list');for(const effect of obj.effects)list.append(node('div','✦ '+effect,'recipe-ingredient'));details.append(list);c.append(details)}
+
  if(rec&&!obj.epic){const btn=button('Ver receta',()=>{filters.recipes=obj.name.toLowerCase();cursor.recipes=0;const search=containers.recipes?.grid?.parentElement?.querySelector('input');if(search)search.value=obj.name;paint('recipes');document.querySelector('[data-tab="recipes"]')?.click()});btn.className='smallbutton';c.append(btn)}
  const foot=node('div','','bottom');foot.append(node('span',obj.epic?'Boss épico':obj.grade,'badge-grade'),elink('Ficha LU4 ↗',obj.source_url));c.append(foot);return c
 }
