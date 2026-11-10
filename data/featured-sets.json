@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Doom Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "set_bonus": "CON +3 · HP +350 · Breath +200 · Sleep/Hold +30%",
+    "source_url": "https://la2wiki.com/lu4/set/doom-plate-heavy",
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Doom Plate Armor",
+        "recipe_result": "Doom Plate Armor"
+      },
+      {
+        "slot": "Casco",
+        "name": "Doom Helmet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Doom Gloves - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Doom Boots - Heavy Armor"
+      },
+      {
+        "slot": "Escudo",
+        "name": "Doom Shield"
+      }
+    ]
+  },
+  {
+    "name": "Majestic Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "set_bonus": "STR +2 · P. Atk. +8% · Accuracy +5 · Stun Resistance +50%",
+    "source_url": "https://la2wiki.com/lu4/set/majestic-heavy",
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Majestic Plate Armor",
+        "recipe_result": "Sealed Majestic Plate Armor"
+      },
+      {
+        "slot": "Casco",
+        "name": "Majestic Circlet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Majestic Gauntlets - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Majestic Boots - Heavy Armor"
+      }
+    ]
+  },
+  {
+    "name": "Majestic Light",
+    "grade": "A",
+    "armor_type": "light",
+    "set_bonus": "DEX +2 · MP +360 · Bow P. Atk. +8% · Weight +6800 · Stun Resistance +50%",
+    "source_url": "https://la2wiki.com/lu4/set/majestic-light",
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Majestic Leather Armor",
+        "recipe_result": "Sealed Majestic Leather Armor"
+      },
+      {
+        "slot": "Casco",
+        "name": "Majestic Circlet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Majestic Gauntlets - Light Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Majestic Boots - Light Armor"
+      }
+    ]
+  },
+  {
+    "name": "Majestic Robe",
+    "grade": "A",
+    "armor_type": "robe",
+    "set_bonus": "MEN +2 · INT -2 · MP +360 · Cast. Spd. +15% · MP Regen +24% · Stun Resistance +50%",
+    "source_url": "https://la2wiki.com/lu4/set/majestic-magic-set",
+    "parts": [
+      {
+        "slot": "Robe",
+        "name": "Majestic Robe",
+        "recipe_result": "Sealed Majestic Robe"
+      },
+      {
+        "slot": "Casco",
+        "name": "Majestic Circlet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Majestic Gauntlets - Robe"
+      },
+      {
+        "slot": "Botas",
+        "name": "Majestic Boots - Robe"
+      }
+    ]
+  }
+]
