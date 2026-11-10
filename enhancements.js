@@ -16,7 +16,7 @@ async function syncCatalog(){
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
  if(!data.items.length){data.items=await paged('items','id,name,grade,category,icon_url,source_url,verified');}
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
- if(!data.recipes.length){const rows=await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified');data.recipes=rows.map(r=>({...r,name:'Receta #'+r.id,result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
+ if(!data.recipes.length){const rows=await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified');data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id),result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
  [goalItems,goalSets]=await Promise.all([paged('items','id,name,category'),paged('equipment_sets','id,name')]);
  renderAll();
 }
@@ -37,7 +37,13 @@ function card(obj,kind){
  const c=node('article','','premium-card'),head=node('div','','premium-head'),right=node('div');
  const item={...obj,category:kind==='sets'?'armor':kind==='recipes'?'recipe_item':obj.category};
  right.append(node('h3',obj.name||obj.result||'Ítem'),node('div',kind==='recipes'?obj.result||'Resultado':kind==='sets'?(obj.armor_type||'Armadura'):obj.category||'Ítem','meta'));head.append(imgIcon(item),right);c.append(head);
- if(kind==='recipes')c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito'),'meta'));
+ if(kind==='recipes'){
+ c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito')+(obj.craft_level?' · Nivel '+obj.craft_level:''),'meta'));
+ if(obj.id){
+  const parts=dbIngredients.filter(x=>x.recipe_id===obj.id);
+  if(parts.length){const box=node('div','','source-list');for(const part of parts){const name=goalItems.find(i=>i.id===part.item_id)?.name||'Ítem '+part.item_id;const quantity=balances.filter(b=>b.item_id===part.item_id).reduce((s,b)=>s+Number(b.quantity),0);box.append(node('span',name+' ×'+fmt(part.quantity)+' · CP: '+fmt(quantity)))}c.append(box)}
+ }
+}
  if(kind==='sets')c.append(node('div','Grado '+(obj.grade||'—')+(obj.set_bonus?' · '+obj.set_bonus:''),'meta'));
  const foot=node('div','','bottom');foot.append(node('span',obj.grade||'—','badge-grade'));
  let link=obj.source_url;
@@ -63,7 +69,7 @@ function paint(id){
  const back=button('← Anterior',()=>{cursor[id]--;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});back.disabled=cursor[id]===0;const next=button('Siguiente →',()=>{cursor[id]++;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});next.disabled=start+limit>=filtered.length;h.foot.append(back,next)
 }
 function renderAll(){for(const id of ['catalog','recipes','sets']){if(!containers[id])containers[id]=mount(id);paint(id)}goalsUI()}
-async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user)return;const {data:members}=await db.from('party_members').select('party_id').eq('user_id',user.id).limit(1);party=members?.[0]?.party_id||null;await syncInventory();await syncGoals()}
+async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user)return;const {data:members}=await db.from('party_members').select('party_id').eq('user_id',user.id).limit(1);party=members?.[0]?.party_id||null;await syncInventory();await syncGoals();paint('recipes')}
 function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();const panel=node('section','','panel'),h=node('h2','Objetivos de crafteo de la CP'),form=document.createElement('form'),row=node('div','','premium-toolbar'),target=document.createElement('select'),title=document.createElement('input'),priority=document.createElement('select'),submit=node('button','Crear objetivo','primary');submit.type='submit';title.placeholder='Nombre del objetivo';title.required=true;
  const first=node('option','Elegir objetivo: ítem o set');first.value='';target.append(first);
  for(const obj of goalItems.filter(i=>['weapon','armor','material'].includes(i.category)).slice(0,2000)){const o=node('option',obj.name);o.value='item:'+obj.id;target.append(o)}
