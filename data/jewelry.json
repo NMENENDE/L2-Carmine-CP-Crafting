@@ -15,7 +15,12 @@
     "magic_defense": 85,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia Sleep/Parálisis +8%",
+      "Resistencia elemental +4"
+    ],
+    "mp_bonus": 33
   },
   {
     "name": "Phoenix Necklace",
@@ -24,7 +29,12 @@
     "magic_defense": 80,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia Sleep/Parálisis +6%",
+      "Resistencia elemental +3"
+    ],
+    "mp_bonus": 26
   },
   {
     "name": "Sealed Majestic Necklace",
@@ -51,7 +61,11 @@
     "magic_defense": 63,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia a Stun y ataques mentales +6%"
+    ],
+    "mp_bonus": 25
   },
   {
     "name": "Refined Earring of Orfen",
@@ -78,7 +92,11 @@
     "magic_defense": 60,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia a Stun y ataques mentales +5%"
+    ],
+    "mp_bonus": 20
   },
   {
     "name": "Sealed Majestic Earring",
@@ -105,7 +123,12 @@
     "magic_defense": 42,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Hold/Root +6%",
+      "Daño crítico físico +4%"
+    ],
+    "mp_bonus": 17
   },
   {
     "name": "Refined Ring of Core",
@@ -132,7 +155,12 @@
     "magic_defense": 40,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Hold/Root +5%",
+      "Daño crítico físico +3%"
+    ],
+    "mp_bonus": 13
   },
   {
     "name": "Sealed Majestic Ring",
@@ -168,7 +196,11 @@
     "magic_defense": 72,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia Sleep y Parálisis +4%",
+      "Resistencia elemental +2"
+    ]
   },
   {
     "name": "Necklace of Holy Spirit",
@@ -195,7 +227,11 @@
     "magic_defense": 68,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia Sleep y Parálisis +3%",
+      "Resistencia elemental +1"
+    ]
   },
   {
     "name": "Enchanted Earring of Orfen",
@@ -213,7 +249,10 @@
     "magic_defense": 54,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia a Stun y ataques mentales +4%"
+    ]
   },
   {
     "name": "Earring of Holy Spirit",
@@ -249,7 +288,10 @@
     "magic_defense": 51,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Resistencia a Stun y ataques mentales +3%"
+    ]
   },
   {
     "name": "Enchanted Ring of Core",
@@ -276,7 +318,11 @@
     "magic_defense": 36,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Hold/Root +4%",
+      "Daño crítico físico +2%"
+    ]
   },
   {
     "name": "Ring of Holy Spirit",
@@ -303,7 +349,11 @@
     "magic_defense": 34,
     "epic": false,
     "craftable": true,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "Hold/Root +3%",
+      "Daño crítico físico +1%"
+    ]
   },
   {
     "name": "Blessed Necklace",
@@ -354,10 +404,19 @@
     "name": "Earring of Orfen",
     "grade": "C",
     "kind": "earring",
-    "magic_defense": 63,
+    "magic_defense": 71,
     "epic": true,
     "craftable": false,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "MP máximo +8%",
+      "Recuperación de MP +1",
+      "Consumo MP habilidades −5%",
+      "Resistencia Mana Burn +10%",
+      "Resistencia mental +15%",
+      "Resistencia y probabilidad de Bleed +30%"
+    ],
+    "mp_bonus": 31
   },
   {
     "name": "Blessed Earring",
@@ -402,7 +461,14 @@
     "magic_defense": 42,
     "epic": true,
     "craftable": false,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "M. Atk. +4%",
+      "Daño crítico mágico +10%",
+      "Resistencia y probabilidad de Poison +30%",
+      "Resistencia y probabilidad de Hold +20%"
+    ],
+    "mp_bonus": 25
   },
   {
     "name": "Physical Ring of Queen Ant",
@@ -411,7 +477,16 @@
     "magic_defense": 42,
     "epic": true,
     "craftable": false,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "P. Atk. +2%",
+      "Daño crítico físico +10%",
+      "Daño crítico de habilidades físicas +10%",
+      "Accuracy +2",
+      "Resistencia y probabilidad de Poison +30%",
+      "Resistencia y probabilidad de Hold +20%"
+    ],
+    "mp_bonus": 25
   },
   {
     "name": "Ring of Core",
@@ -420,7 +495,16 @@
     "magic_defense": 42,
     "epic": true,
     "craftable": false,
-    "source_url": "https://la2wiki.com/lu4/jewelry"
+    "source_url": "https://la2wiki.com/es/lu4/guide/all-jewerly-types",
+    "effects": [
+      "HP máximo +5%",
+      "Curación recibida +10%",
+      "Velocidad +3",
+      "Resistencia Parálisis/Medusa +15%",
+      "Resistencia Slow +20%",
+      "Resistencia y probabilidad de Poison +30%"
+    ],
+    "mp_bonus": 25
   },
   {
     "name": "Blessed Ring",
