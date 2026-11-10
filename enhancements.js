@@ -12,11 +12,12 @@ const typeIcon={material:'⬡',recipe_item:'♜',weapon:'⚔',armor:'♞',jewelr
 async function json(path){try{const r=await fetch(path,{cache:'no-store'});if(!r.ok)return null;return await r.json()}catch{return null}}
 async function paged(table,columns,max=9000){const out=[];for(let start=0;start<max;start+=1000){const {data,error}=await db.from(table).select(columns).range(start,start+999);if(error)break;out.push(...data);if(data.length<1000)break}return out}
 async function syncCatalog(){
- const [a,b,c,d,featured]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json'].map(json));
+ const [a,b,c,d,featured,featuredSets]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json'].map(json));
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
  if(!data.items.length){data.items=await paged('items','id,name,grade,category,icon_url,source_url,verified');}
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
  if(!data.recipes.length){const rows=await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified');data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id),result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
+ if(Array.isArray(featuredSets)){for(const set of featuredSets){const ix=data.sets.findIndex(x=>x.name.toLowerCase()===set.name.toLowerCase());if(ix>=0)data.sets[ix]={...data.sets[ix],...set};else data.sets.push(set)}}
  if(Array.isArray(featured)){const known=new Set(data.recipes.map(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()));for(const recipe of featured){const k=recipe.name.toLowerCase().replace(/\s+/g,' ').trim();if(!known.has(k)){data.recipes.push(recipe);known.add(k)}else{const idx=data.recipes.findIndex(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()===k);if(idx>=0&&!data.recipes[idx].ingredients?.length)data.recipes[idx]={...data.recipes[idx],...recipe}}}}
  [goalItems,goalSets]=await Promise.all([paged('items','id,name,category'),paged('equipment_sets','id,name')]);
  renderAll();
@@ -58,7 +59,19 @@ function card(obj,kind){
   if(parts.length){const box=node('div','','source-list');for(const part of parts){const name=goalItems.find(i=>i.id===part.item_id)?.name||'Ítem '+part.item_id;const quantity=balances.filter(b=>b.item_id===part.item_id).reduce((s,b)=>s+Number(b.quantity),0);box.append(node('span',name+' ×'+fmt(part.quantity)+' · CP: '+fmt(quantity)))}c.append(box)}
  }
 }
- if(kind==='sets')c.append(node('div','Grado '+(obj.grade||'—')+(obj.set_bonus?' · '+obj.set_bonus:''),'meta'));
+ if(kind==='sets'){
+ c.append(node('div','Grado '+(obj.grade||'—')+(obj.set_bonus?' · '+obj.set_bonus:''),'meta'));
+ if(Array.isArray(obj.parts)&&obj.parts.length){
+  const details=document.createElement('details');details.className='recipe-detail';
+  details.append(node('summary','Ver '+obj.parts.length+' piezas del set'));
+  const list=node('div','','source-list');
+  for(const part of obj.parts){
+    const line=node('div','','recipe-ingredient');line.append(node('span',part.slot+': '+part.name));
+    if(part.recipe_result){const recipe=data.recipes.find(r=>r.result===part.recipe_result&&r.success_rate===1)||data.recipes.find(r=>r.result===part.recipe_result);if(recipe){const see=button('Materiales ↗',()=>{filters.recipes=part.recipe_result.toLowerCase();cursor.recipes=0;const search=containers.recipes?.grid?.parentElement?.querySelector('input');if(search)search.value=part.recipe_result;paint('recipes');document.querySelectorAll('[data-tab="recipes"]')[0]?.click()});see.className='smallbutton';line.append(see)}}
+    list.append(line);
+  }details.append(list);c.append(details)
+ }
+}
  const foot=node('div','','bottom');foot.append(node('span',obj.grade||'—','badge-grade'));
  let link=obj.source_url;
  if(!link&&kind==='catalog'&&obj.name)link='https://la2wiki.com/lu4/items';
@@ -79,7 +92,9 @@ function mount(id){const host=$(id);if(!host)return null;const shell=node('div',
  const quantity=document.createElement('input');quantity.type='number';quantity.min='1';quantity.max='1000';quantity.step='1';quantity.value=String(craftQty);quantity.title='Cantidad de crafteos';quantity.placeholder='Cantidad a fabricar';bar.append(quantity);
  quantity.oninput=()=>{const n=Number(quantity.value);if(Number.isSafeInteger(n)&&n>=1&&n<=1000){craftQty=n;paint('recipes')}}
 }
- if(id==='catalog'){const select=document.createElement('select');select.id='premium-category';for(const [v,t] of [['','Todas las categorías'],['material','Materiales'],['weapon','Armas'],['armor','Armaduras'],['jewelry','Joyas'],['recipe_item','Recetas'],['scroll','Scrolls'],['potion','Pociones'],['shot','Shots y flechas'],['spellbook','Spellbooks']]){const opt=node('option',t);opt.value=v;select.append(opt)}bar.append(select);select.onchange=()=>{cursor.catalog=0;paint('catalog')}}else if(id==='sets'){const select=document.createElement('select');select.id='premium-grade';for(const v of ['Todos los grados','S','A','B','C','D','NG']){const o=node('option',v);o.value=v==='Todos los grados'?'':v;select.append(o)}bar.append(select);select.onchange=()=>{cursor.sets=0;paint('sets')}}
+ if(id==='catalog'){const select=document.createElement('select');select.id='premium-category';for(const [v,t] of [['','Todas las categorías'],['material','Materiales'],['weapon','Armas'],['armor','Armaduras'],['jewelry','Joyas'],['recipe_item','Recetas'],['scroll','Scrolls'],['potion','Pociones'],['shot','Shots y flechas'],['spellbook','Spellbooks']]){const opt=node('option',t);opt.value=v;select.append(opt)}bar.append(select);select.onchange=()=>{cursor.catalog=0;paint('catalog')}}else if(id==='sets'){
+ const type=document.createElement('select');type.id='premium-set-type';for(const [v,t] of [['','Todos los tipos'],['heavy','Heavy'],['light','Light'],['robe','Robe']]){const o=node('option',t);o.value=v;type.append(o)}bar.append(type);type.onchange=()=>{cursor.sets=0;paint('sets')};
+ const select=document.createElement('select');select.id='premium-grade';for(const v of ['Todos los grados','S','A','B','C','D','NG']){const o=node('option',v);o.value=v==='Todos los grados'?'':v;select.append(o)}bar.append(select);select.onchange=()=>{cursor.sets=0;paint('sets')}}
  const counter=node('div','','small muted'),grid=node('div','','premium-grid'),foot=node('div','','premium-footer');
  shell.append(node('h2',id==='catalog'?'Catálogo LU4':id==='recipes'?'Recetas de crafting':'Sets de armaduras'),bar,counter,grid,foot);host.append(shell);
  search.oninput=()=>{filters[id]=search.value.toLocaleLowerCase();cursor[id]=0;paint(id)};return {grid,counter,foot}
@@ -93,7 +108,7 @@ function paint(id){
  if($('premium-armor-type')?.value&&x.armor_type!==$('premium-armor-type').value)return false;
  }
  if(id==='recipes'&&!$('premium-recipe-kind')?.value&&$('premium-armor-type')?.value&&x.armor_type!==$('premium-armor-type').value)return false;
- if(id==='catalog'&&$('premium-category')?.value&&x.category!==$('premium-category').value)return false;if(id==='sets'&&$('premium-grade')?.value&&x.grade!==$('premium-grade').value)return false;return true});
+ if(id==='catalog'&&$('premium-category')?.value&&x.category!==$('premium-category').value)return false;if(id==='sets'&&$('premium-grade')?.value&&x.grade!==$('premium-grade').value)return false;if(id==='sets'&&$('premium-set-type')?.value&&x.armor_type!==$('premium-set-type').value)return false;return true});
  const limit=60;cursor[id]=Math.max(0,Math.min(cursor[id],Math.max(0,Math.ceil(filtered.length/limit)-1)));const start=cursor[id]*limit;const h=containers[id];if(!h)return;h.grid.replaceChildren();h.foot.replaceChildren();
  for(const obj of filtered.slice(start,start+limit))h.grid.append(card(obj,id));if(!filtered.length)h.grid.append(node('div','No se encontraron resultados.','premium-empty'));
  h.counter.textContent=fmt(filtered.length)+' resultados · Página '+(cursor[id]+1)+' de '+Math.max(1,Math.ceil(filtered.length/limit));
