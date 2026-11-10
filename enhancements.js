@@ -15,7 +15,7 @@ async function syncCatalog(){
  const [a,b,c,d,featured,featuredSets,icons,jewelry,moreArmor,moreWeapons,jewelryRecipes,guideSets]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json','data/icons.json','data/jewelry.json','data/recipe-index-cba.json','data/weapon-recipes-cba.json','data/jewelry-recipes-cba.json','data/lu4-cba-guide-sets.json'].map(json));
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
  data.icons=icons&&typeof icons==='object'?icons:{byId:{},byName:{}};
- data.jewelry=Array.isArray(jewelry)?jewelry.filter(j=>['C','B','A'].includes(j.grade)||j.epic):[];
+ data.jewelry=Array.isArray(jewelry)?jewelry.filter(j=>['C','B','A'].includes(j.grade)):[];
  if(!data.items.length){data.items=await paged('items','id,name,grade,category,icon_url,source_url,verified');}
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
  if(!data.recipes.length){const rows=(await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified')).filter(r=>r.verified);data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id)+' ('+Math.round(Number(r.success_rate)*100)+'%)',result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
