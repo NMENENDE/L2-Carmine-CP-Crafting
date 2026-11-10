@@ -54,7 +54,7 @@ function imgIcon(item){
 function card(obj,kind){
  const c=node('article','','premium-card'),head=node('div','','premium-head'),right=node('div');
  const item={...obj,category:kind==='sets'?'armor':kind==='recipes'?'recipe_item':obj.category};
- right.append(node('h3',obj.name||obj.result||'Ítem'),node('div',kind==='recipes'?obj.result||'Resultado':kind==='sets'?(obj.armor_type||'Armadura'):obj.category||'Ítem','meta'));head.append(imgIcon(item),right);c.append(head);
+ right.append(node('h3',obj.name||obj.result||'Ítem'),node('div',kind==='recipes'?obj.result||'Resultado':kind==='sets'?({heavy:'Armadura pesada · Heavy',light:'Armadura ligera · Light',robe:'Túnica · Robe'}[obj.armor_type]||'Set de armadura'):obj.category||'Ítem',kind==='sets'?'set-label':'meta'));head.append(imgIcon(item),right);c.append(head);
  if(kind==='recipes'){
  c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito')+(obj.craft_level?' · Nivel '+obj.craft_level:'')+(obj.armor_type?' · '+obj.armor_type.toUpperCase():''),'meta'));
  if(Array.isArray(obj.ingredients)&&obj.ingredients.length){
