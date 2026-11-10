@@ -39,4 +39,4 @@ $('createcp').onsubmit=async e=>{e.preventDefault();const {error}=await db.rpc('
 $('joincp').onsubmit=async e=>{e.preventDefault();const {error}=await db.rpc('join_cp',{p_code:$('invite').value.trim(),p_character_name:$('character').value.trim()});if(error)message(error.message);else{message('Te uniste a la CP');await refresh()}};
 $('addform').onsubmit=async e=>{e.preventDefault();if(!party)return;const amount=Number($('amount').value);if(!Number.isSafeInteger(amount)||amount<1)return message('Cantidad inválida');const {error}=await db.rpc('adjust_material',{p_party:party.id,p_location:$('locationselect').value,p_item:Number($('itemselect').value),p_delta:amount,p_reason:'Ingreso desde Carmine Forge'});if(error)message(error.message);else{message('Material registrado');$('amount').value='';await refresh()}};
 db.auth.onAuthStateChange(()=>setTimeout(update,0));update();
-</script><script type="module" src="enhancements.js?v=5"></script></body></html>
+</script><script type="module" src="enhancements.js?v=6"></script></body></html>
