@@ -1,7 +1,7 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const db=createClient('https://exdbjmenogqmdsagtzsc.supabase.co','sb_publishable_aiD4YZk2gx8B1thwWfcB5Q_Zu9Y1UJO');
 const $=id=>document.getElementById(id), q=(el,sel)=>el?.querySelector(sel);
-let data={items:[],recipes:[],sets:[],materials:[]},cursor={catalog:0,recipes:0,sets:0},filters={catalog:'',recipes:'',sets:''},user=null,party=null,balances=[],dbRecipes=[],dbIngredients=[];
+let goalItems=[],goalSets=[];let data={items:[],recipes:[],sets:[],materials:[]},cursor={catalog:0,recipes:0,sets:0},filters={catalog:'',recipes:'',sets:''},user=null,party=null,balances=[],dbRecipes=[],dbIngredients=[];
 const safe=t=>String(t??''),slug=t=>safe(t).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const css=(el,n)=>el.classList.add(n);
 const node=(tag,value='',cls='')=>{const el=document.createElement(tag);el.textContent=safe(value);if(cls)el.className=cls;return el};
@@ -17,9 +17,22 @@ async function syncCatalog(){
  if(!data.items.length){data.items=await paged('items','id,name,grade,category,icon_url,source_url,verified');}
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
  if(!data.recipes.length){const rows=await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified');data.recipes=rows.map(r=>({...r,name:'Receta #'+r.id,result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
+ [goalItems,goalSets]=await Promise.all([paged('items','id,name,category'),paged('equipment_sets','id,name')]);
  renderAll();
 }
-function imgIcon(item){const icon=node('div','', 'premium-icon'),url=item.icon_url||item.image_url;if(url&&/^https:\/\//.test(url)){const image=document.createElement('img');image.src=url;image.loading='lazy';image.alt='';image.onerror=()=>{icon.replaceChildren(node('span',typeIcon[item.category]||'✦'))};icon.append(image)}else{icon.append(node('span',typeIcon[item.category]||'✦'))}return icon}
+function vectorIcon(item){
+ const n=safe(item.name).toLowerCase();let key='rune';
+ if(item.category==='material'){
+  if(/bone|horn|tooth/.test(n))key='bone';
+  else if(/ore|iron|mithril|steel|coal|metal|ingot|nugget/.test(n))key='ore';
+  else if(/skin|leather|thread|fabric|suede|hemp|braid|fiber/.test(n))key='fabric';
+  else if(/gem|crystal|jewel|stone/.test(n))key='gem';
+  else key='metal';
+ }else key=({weapon:'weapon',armor:'armor',jewelry:'gem',recipe_item:'scroll',scroll:'scroll',potion:'potion',shot:'rune',spellbook:'scroll',dye:'gem'})[item.category]||'rune';
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 48 48');svg.setAttribute('width','36');svg.setAttribute('height','36');svg.setAttribute('aria-hidden','true');
+ const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','assets/icons.svg#'+key);svg.append(use);return svg;
+}
+function imgIcon(item){const icon=node('div','', 'premium-icon'),url=item.icon_url||item.image_url;if(url&&/^https:\/\//.test(url)){const image=document.createElement('img');image.src=url;image.loading='lazy';image.alt='';image.onerror=()=>{icon.replaceChildren(node('span',typeIcon[item.category]||'✦'))};icon.append(image)}else{icon.append(vectorIcon(item))}return icon}
 function card(obj,kind){
  const c=node('article','','premium-card'),head=node('div','','premium-head'),right=node('div');
  const item={...obj,category:kind==='sets'?'armor':kind==='recipes'?'recipe_item':obj.category};
@@ -53,8 +66,8 @@ function renderAll(){for(const id of ['catalog','recipes','sets']){if(!container
 async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user)return;const {data:members}=await db.from('party_members').select('party_id').eq('user_id',user.id).limit(1);party=members?.[0]?.party_id||null;await syncInventory();await syncGoals()}
 function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();const panel=node('section','','panel'),h=node('h2','Objetivos de crafteo de la CP'),form=document.createElement('form'),row=node('div','','premium-toolbar'),target=document.createElement('select'),title=document.createElement('input'),priority=document.createElement('select'),submit=node('button','Crear objetivo','primary');submit.type='submit';title.placeholder='Nombre del objetivo';title.required=true;
  const first=node('option','Elegir objetivo: ítem o set');first.value='';target.append(first);
- for(const obj of data.items.filter(i=>['weapon','armor','material'].includes(i.category)).slice(0,2000)){const o=node('option',obj.name);o.value='item:'+obj.id;target.append(o)}
- for(const obj of data.sets.filter(i=>i.id)){const o=node('option','Set: '+obj.name);o.value='set:'+obj.id;target.append(o)}
+ for(const obj of goalItems.filter(i=>['weapon','armor','material'].includes(i.category)).slice(0,2000)){const o=node('option',obj.name);o.value='item:'+obj.id;target.append(o)}
+ for(const obj of goalSets.filter(i=>i.id)){const o=node('option','Set: '+obj.name);o.value='set:'+obj.id;target.append(o)}
  for(const [v,t] of [['1','Prioridad alta'],['2','Prioridad media'],['3','Prioridad baja']]){const o=node('option',t);o.value=v;priority.append(o)}
  row.append(target,title,priority,submit);form.append(row);form.onsubmit=async e=>{e.preventDefault();if(!user||!party)return message('Primero ingresá a tu CP');const [kind,id]=target.value.split(':');if(!id)return message('Seleccioná un objetivo');const payload={party_id:party,title:title.value.trim(),priority:Number(priority.value),created_by:user.id};if(kind==='item')payload.target_item_id=Number(id);else payload.target_set_id=Number(id);const {error}=await db.from('crafting_projects').insert(payload);if(error)message(error.message);else{title.value='';await syncGoals()}};const list=node('div','', 'stack');panel.append(h,form,list);host.append(panel);host._list=list}
 async function syncGoals(){if(!user||!party||!$('goals'))return;if(!$('goals')._list)goalsUI();const {data:goals,error}=await db.from('crafting_projects').select('id,title,status,priority,target_item_id,target_set_id').eq('party_id',party).order('priority',{ascending:true});if(error){message(error.message);return}
