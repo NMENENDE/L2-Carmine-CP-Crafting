@@ -1,0 +1,470 @@
+[
+  {
+    "name": "Frintezza's Necklace",
+    "grade": "A",
+    "kind": "necklace",
+    "magic_defense": 106,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Majestic Necklace",
+    "grade": "A",
+    "kind": "necklace",
+    "magic_defense": 85,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Phoenix Necklace",
+    "grade": "A",
+    "kind": "necklace",
+    "magic_defense": 80,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sealed Majestic Necklace",
+    "grade": "A",
+    "kind": "necklace",
+    "magic_defense": 80,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sealed Phoenix Necklace",
+    "grade": "A",
+    "kind": "necklace",
+    "magic_defense": 76,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Majestic Earring",
+    "grade": "A",
+    "kind": "earring",
+    "magic_defense": 63,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Refined Earring of Orfen",
+    "grade": "A",
+    "kind": "earring",
+    "magic_defense": 63,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Zaken's Earring",
+    "grade": "A",
+    "kind": "earring",
+    "magic_defense": 63,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Phoenix Earring",
+    "grade": "A",
+    "kind": "earring",
+    "magic_defense": 60,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sealed Majestic Earring",
+    "grade": "A",
+    "kind": "earring",
+    "magic_defense": 60,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sealed Phoenix Earring",
+    "grade": "A",
+    "kind": "earring",
+    "magic_defense": 57,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Majestic Ring",
+    "grade": "A",
+    "kind": "ring",
+    "magic_defense": 42,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Refined Ring of Core",
+    "grade": "A",
+    "kind": "ring",
+    "magic_defense": 42,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Ring of Baium",
+    "grade": "A",
+    "kind": "ring",
+    "magic_defense": 42,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Phoenix Ring",
+    "grade": "A",
+    "kind": "ring",
+    "magic_defense": 40,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sealed Majestic Ring",
+    "grade": "A",
+    "kind": "ring",
+    "magic_defense": 40,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sealed Phoenix Ring",
+    "grade": "A",
+    "kind": "ring",
+    "magic_defense": 38,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Elemental Necklace",
+    "grade": "B",
+    "kind": "necklace",
+    "magic_defense": 72,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Necklace of Black Ore",
+    "grade": "B",
+    "kind": "necklace",
+    "magic_defense": 72,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Necklace of Holy Spirit",
+    "grade": "B",
+    "kind": "necklace",
+    "magic_defense": 72,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sage's Necklace",
+    "grade": "B",
+    "kind": "necklace",
+    "magic_defense": 72,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Adamantite Necklace",
+    "grade": "B",
+    "kind": "necklace",
+    "magic_defense": 68,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Enchanted Earring of Orfen",
+    "grade": "B",
+    "kind": "earring",
+    "magic_defense": 63,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Earring of Black Ore",
+    "grade": "B",
+    "kind": "earring",
+    "magic_defense": 54,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Earring of Holy Spirit",
+    "grade": "B",
+    "kind": "earring",
+    "magic_defense": 54,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Elemental Earring",
+    "grade": "B",
+    "kind": "earring",
+    "magic_defense": 54,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sage's Earring",
+    "grade": "B",
+    "kind": "earring",
+    "magic_defense": 54,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Adamantite Earring",
+    "grade": "B",
+    "kind": "earring",
+    "magic_defense": 51,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Enchanted Ring of Core",
+    "grade": "B",
+    "kind": "ring",
+    "magic_defense": 42,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Elemental Ring",
+    "grade": "B",
+    "kind": "ring",
+    "magic_defense": 36,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Ring of Black Ore",
+    "grade": "B",
+    "kind": "ring",
+    "magic_defense": 36,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Ring of Holy Spirit",
+    "grade": "B",
+    "kind": "ring",
+    "magic_defense": 36,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Sage's Ring",
+    "grade": "B",
+    "kind": "ring",
+    "magic_defense": 36,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Adamantite Ring",
+    "grade": "B",
+    "kind": "ring",
+    "magic_defense": 34,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Blessed Necklace",
+    "grade": "C",
+    "kind": "necklace",
+    "magic_defense": 64,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Necklace of Seal",
+    "grade": "C",
+    "kind": "necklace",
+    "magic_defense": 64,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Necklace of Mermaid",
+    "grade": "C",
+    "kind": "necklace",
+    "magic_defense": 60,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Necklace of Protection",
+    "grade": "C",
+    "kind": "necklace",
+    "magic_defense": 56,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Aquastone Necklace",
+    "grade": "C",
+    "kind": "necklace",
+    "magic_defense": 52,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Earring of Orfen",
+    "grade": "C",
+    "kind": "earring",
+    "magic_defense": 63,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Blessed Earring",
+    "grade": "C",
+    "kind": "earring",
+    "magic_defense": 48,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Nassen's Earring",
+    "grade": "C",
+    "kind": "earring",
+    "magic_defense": 48,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Earring of Seal",
+    "grade": "C",
+    "kind": "earring",
+    "magic_defense": 45,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Earring of Protection",
+    "grade": "C",
+    "kind": "earring",
+    "magic_defense": 42,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Magical Ring of Queen Ant",
+    "grade": "C",
+    "kind": "ring",
+    "magic_defense": 42,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Physical Ring of Queen Ant",
+    "grade": "C",
+    "kind": "ring",
+    "magic_defense": 42,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Ring of Core",
+    "grade": "C",
+    "kind": "ring",
+    "magic_defense": 42,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Blessed Ring",
+    "grade": "C",
+    "kind": "ring",
+    "magic_defense": 32,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Ring of Seal",
+    "grade": "C",
+    "kind": "ring",
+    "magic_defense": 32,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Aquastone Ring",
+    "grade": "C",
+    "kind": "ring",
+    "magic_defense": 26,
+    "epic": false,
+    "craftable": true,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Necklace of Valakas",
+    "grade": "S",
+    "kind": "necklace",
+    "magic_defense": 125,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  },
+  {
+    "name": "Earring of Antharas",
+    "grade": "S",
+    "kind": "earring",
+    "magic_defense": 94,
+    "epic": true,
+    "craftable": false,
+    "source_url": "https://la2wiki.com/lu4/jewelry"
+  }
+]
