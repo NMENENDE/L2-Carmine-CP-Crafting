@@ -12,7 +12,7 @@ const typeIcon={material:'⬡',recipe_item:'♜',weapon:'⚔',armor:'♞',jewelr
 async function json(path){try{const r=await fetch(path,{cache:'no-store'});if(!r.ok)return null;return await r.json()}catch{return null}}
 async function paged(table,columns,max=9000){const out=[];for(let start=0;start<max;start+=1000){const {data,error}=await db.from(table).select(columns).range(start,start+999);if(error)break;out.push(...data);if(data.length<1000)break}return out}
 async function syncCatalog(){
- const [a,b,c,d,featured,featuredSets,icons,jewelry,moreArmor,moreWeapons]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json','data/icons.json','data/jewelry.json','data/recipe-index-cba.json','data/weapon-recipes-cba.json'].map(json));
+ const [a,b,c,d,featured,featuredSets,icons,jewelry,moreArmor,moreWeapons,jewelryRecipes]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json','data/icons.json','data/jewelry.json','data/recipe-index-cba.json','data/weapon-recipes-cba.json','data/jewelry-recipes-cba.json'].map(json));
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
  data.icons=icons&&typeof icons==='object'?icons:{byId:{},byName:{}};
  data.jewelry=Array.isArray(jewelry)?jewelry.filter(j=>['C','B','A'].includes(j.grade)||j.epic):[];
@@ -21,7 +21,7 @@ async function syncCatalog(){
  if(!data.recipes.length){const rows=(await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified')).filter(r=>r.verified);data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id)+' ('+Math.round(Number(r.success_rate)*100)+'%)',result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
  if(Array.isArray(featuredSets)){for(const set of featuredSets){const ix=data.sets.findIndex(x=>x.name.toLowerCase()===set.name.toLowerCase());if(ix>=0)data.sets[ix]={...data.sets[ix],...set};else data.sets.push(set)}}
  if(Array.isArray(featured)){const known=new Set(data.recipes.map(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()));for(const recipe of featured){const k=recipe.name.toLowerCase().replace(/\s+/g,' ').trim();if(!known.has(k)){data.recipes.push(recipe);known.add(k)}else{const idx=data.recipes.findIndex(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()===k);if(idx>=0&&!data.recipes[idx].ingredients?.length)data.recipes[idx]={...data.recipes[idx],...recipe}}}}
- const extra=[...(Array.isArray(moreArmor)?moreArmor:[]),...(Array.isArray(moreWeapons)?moreWeapons:[])];
+ const extra=[...(Array.isArray(moreArmor)?moreArmor:[]),...(Array.isArray(moreWeapons)?moreWeapons:[]),...(Array.isArray(jewelryRecipes)?jewelryRecipes:[])];
  const recipeKeys=new Set(data.recipes.map(r=>[r.result,r.success_rate,r.grade].join('|').toLowerCase()));
  for(const r of extra){const k=[r.result,r.success_rate,r.grade].join('|').toLowerCase();if(!recipeKeys.has(k)){data.recipes.push(r);recipeKeys.add(k)}}
  data.recipes=data.recipes.filter(r=>['C','B','A'].includes(r.grade));
@@ -65,7 +65,9 @@ function jewelryCard(obj){
  top.append(imgIcon({...obj,category:'jewelry'}),right);c.append(top);
  const info=node('div','','set-description');
  info.append(node('span','M. Def. '+obj.magic_defense+' · Grado '+obj.grade));
+ const rec=data.recipes.find(r=>r.result?.toLowerCase()===obj.name.toLowerCase()&&r.kind==='jewelry');
  if(obj.epic){info.append(node('strong',' · ÉPICA','epic-label'))}c.append(info);
+ if(rec&&!obj.epic){const btn=button('Ver receta',()=>{filters.recipes=obj.name.toLowerCase();cursor.recipes=0;const search=containers.recipes?.grid?.parentElement?.querySelector('input');if(search)search.value=obj.name;paint('recipes');document.querySelector('[data-tab="recipes"]')?.click()});btn.className='smallbutton';c.append(btn)}
  const foot=node('div','','bottom');foot.append(node('span',obj.epic?'Boss épico':obj.grade,'badge-grade'),elink('Ficha LU4 ↗',obj.source_url));c.append(foot);return c
 }
  function card(obj,kind){
@@ -74,6 +76,7 @@ function jewelryCard(obj){
  right.append(node('h3',obj.name||obj.result||'Ítem'),node('div',kind==='recipes'?obj.result||'Resultado':kind==='sets'?({heavy:'Armadura pesada · Heavy',light:'Armadura ligera · Light',robe:'Túnica · Robe'}[obj.armor_type]||'Set de armadura'):obj.category||'Ítem',kind==='sets'?'set-label':'meta'));head.append(imgIcon(item),right);c.append(head);
  if(kind==='recipes'){
  c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito')+(obj.craft_level?' · Nivel '+obj.craft_level:'')+(obj.armor_type?' · '+obj.armor_type.toUpperCase():''),'meta'));
+ if(!Array.isArray(obj.ingredients)||!obj.ingredients.length){c.append(node('div','Receta registrada · Ingredientes disponibles en la ficha LU4','meta'))}
  if(Array.isArray(obj.ingredients)&&obj.ingredients.length){
    const details=document.createElement('details');details.className='recipe-detail';
    const summary=node('summary','Ver '+obj.ingredients.length+' materiales para '+fmt(craftQty)+' crafteo(s)');
@@ -93,14 +96,20 @@ function jewelryCard(obj){
  }
 }
  if(kind==='sets'){
- c.append(node('div','Grado '+(obj.grade||'—')+(obj.set_bonus?' · '+obj.set_bonus:''),'meta'));
+ const bonus=obj.set_bonus||'Consultar bonificaciones en la ficha del set';
+ c.append(node('div','Grado '+(obj.grade||'—')+' · '+bonus,'meta'));
+ if(obj.total_pdef_reference)c.append(node('div','Defensa física de referencia: '+fmt(obj.total_pdef_reference)+' P. Def.','meta'));
  if(Array.isArray(obj.parts)&&obj.parts.length){
   const details=document.createElement('details');details.className='recipe-detail';
   details.append(node('summary','Ver '+obj.parts.length+' piezas del set'));
   const list=node('div','','source-list');
   for(const part of obj.parts){
-    const line=node('div','','recipe-ingredient');line.append(node('span',part.slot+': '+part.name));
-    if(part.recipe_result){const recipe=data.recipes.find(r=>r.result===part.recipe_result&&r.success_rate===1)||data.recipes.find(r=>r.result===part.recipe_result);if(recipe){const see=button('Materiales ↗',()=>{filters.recipes=part.recipe_result.toLowerCase();cursor.recipes=0;const search=containers.recipes?.grid?.parentElement?.querySelector('input');if(search)search.value=part.recipe_result;paint('recipes');document.querySelectorAll('[data-tab="recipes"]')[0]?.click()});see.className='smallbutton';line.append(see)}}
+    const line=node('div','','recipe-ingredient');
+    const icon=imgIcon({name:part.name,category:'armor'});
+    icon.classList.add('piece-small');
+    line.append(icon,node('span',part.slot+': '+part.name));
+    const matchingResult=part.recipe_result||part.name;
+    if(matchingResult){const recipe=data.recipes.find(r=>r.result===matchingResult&&r.success_rate===1)||data.recipes.find(r=>r.result===matchingResult);if(recipe){const see=button('Materiales ↗',()=>{filters.recipes=matchingResult.toLowerCase();cursor.recipes=0;const search=containers.recipes?.grid?.parentElement?.querySelector('input');if(search)search.value=matchingResult;paint('recipes');document.querySelectorAll('[data-tab="recipes"]')[0]?.click()});see.className='smallbutton';line.append(see)}}
     list.append(line);
   }details.append(list);c.append(details)
  }
@@ -124,7 +133,7 @@ function mount(id){const host=$(id);if(!host)return null;const shell=node('div',
  }
  if(id==='recipes'){
  const select=document.createElement('select');select.id='premium-recipe-kind';
- for(const [v,t] of [['','Todas las recetas'],['armor','Armaduras y sets'],['weapon','Armas'],['material','Materiales']]){const opt=node('option',t);opt.value=v;select.append(opt)}
+ for(const [v,t] of [['','Todas las recetas'],['armor','Armaduras y sets'],['weapon','Armas'],['jewelry','Joyería'],['material','Materiales']]){const opt=node('option',t);opt.value=v;select.append(opt)}
  bar.append(select);select.onchange=()=>{cursor.recipes=0;paint('recipes')};
  const armorSelect=document.createElement('select');armorSelect.id='premium-armor-type';
  for(const [v,t] of [['','Heavy / Light / Robe'],['heavy','Heavy'],['light','Light'],['robe','Robe']]){const o=node('option',t);o.value=v;armorSelect.append(o)}
@@ -134,7 +143,7 @@ function mount(id){const host=$(id);if(!host)return null;const shell=node('div',
 }
  if(id==='catalog'){const select=document.createElement('select');select.id='premium-category';for(const [v,t] of [['','Todas las categorías'],['material','Materiales'],['weapon','Armas'],['armor','Armaduras'],['jewelry','Joyas'],['recipe_item','Recetas'],['scroll','Scrolls'],['potion','Pociones'],['shot','Shots y flechas'],['spellbook','Spellbooks']]){const opt=node('option',t);opt.value=v;select.append(opt)}bar.append(select);select.onchange=()=>{cursor.catalog=0;paint('catalog')}}else if(id==='sets'){
  const type=document.createElement('select');type.id='premium-set-type';for(const [v,t] of [['','Todos los tipos'],['heavy','Heavy'],['light','Light'],['robe','Robe']]){const o=node('option',t);o.value=v;type.append(o)}bar.append(type);type.onchange=()=>{cursor.sets=0;paint('sets')};
- const select=document.createElement('select');select.id='premium-grade';for(const v of ['Todos los grados','S','A','B','C','D','NG']){const o=node('option',v);o.value=v==='Todos los grados'?'':v;select.append(o)}bar.append(select);select.onchange=()=>{cursor.sets=0;paint('sets')}}
+ const select=document.createElement('select');select.id='premium-grade';for(const v of ['Todos los grados','A','B','C']){const o=node('option',v);o.value=v==='Todos los grados'?'':v;select.append(o)}bar.append(select);select.onchange=()=>{cursor.sets=0;paint('sets')}}
  const counter=node('div','','small muted'),grid=node('div','','premium-grid'),foot=node('div','','premium-footer');
  shell.append(node('h2',id==='catalog'?'Catálogo LU4':id==='recipes'?'Recetas de crafting':id==='jewelry'?'Joyería C, B, A y Épica':'Sets de armaduras'),bar,counter,grid,foot);host.append(shell);
  search.oninput=()=>{filters[id]=search.value.toLocaleLowerCase();cursor[id]=0;paint(id)};return {grid,counter,foot}
