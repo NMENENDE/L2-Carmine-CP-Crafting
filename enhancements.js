@@ -101,9 +101,15 @@ function jewelryCard(obj){
  }
 }
  if(kind==='sets'){
- const bonus=obj.set_bonus||'Consultar bonificaciones en la ficha del set';
- c.append(node('div','Grado '+(obj.grade||'—')+' · '+bonus,'meta'));
- if(obj.total_pdef_reference)c.append(node('div','Defensa física de referencia: '+fmt(obj.total_pdef_reference)+' P. Def.','meta'));
+ const bonus=obj.set_bonus;
+ c.append(node('div','Grado '+(obj.grade||'—')+' · '+(({heavy:'Heavy',light:'Light',robe:'Robe'})[obj.armor_type]||'Armadura'),'meta'));
+ if(bonus){
+   const bonusDetails=document.createElement('details');bonusDetails.className='set-benefits';
+   bonusDetails.append(node('summary','Características · '+bonus.split(' · ').length+' bonus'));
+   const bonuses=node('div','','source-list');
+   for(const entry of bonus.split(' · '))bonuses.append(node('div','✦ '+entry,'set-bonus-line'));
+   bonusDetails.append(bonuses);c.append(bonusDetails)
+ }
  if(Array.isArray(obj.parts)&&obj.parts.length){
   const details=document.createElement('details');details.className='recipe-detail';
   details.append(node('summary','Ver '+obj.parts.filter(p=>!p.optional).length+' piezas del set'+(obj.parts.some(p=>p.optional)?' y accesorios opcionales':'')));
