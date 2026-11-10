@@ -3,8 +3,8 @@
     "name": "Doom Heavy",
     "grade": "B",
     "armor_type": "heavy",
-    "set_bonus": "CON +3 · HP +350 · Breath +200 · Sleep/Hold +30%",
-    "source_url": "https://la2wiki.com/lu4/set/doom-plate-heavy",
+    "set_bonus": "CON +3 · HP +350 · Breath +200 · Sleep/Hold Resistance +30%",
+    "source_url": "https://la2wiki.com/lu4/set/doom-set",
     "parts": [
       {
         "slot": "Pechera",
@@ -24,20 +24,22 @@
         "name": "Doom Boots - Heavy Armor"
       },
       {
-        "slot": "Escudo",
+        "slot": "Escudo opcional",
         "name": "Doom Shield"
       }
-    ]
+    ],
+    "verified_source": true,
+    "total_pdef_reference": 578
   },
   {
     "name": "Majestic Heavy",
     "grade": "A",
     "armor_type": "heavy",
     "set_bonus": "STR +2 · P. Atk. +8% · Accuracy +5 · Stun Resistance +50%",
-    "source_url": "https://la2wiki.com/lu4/set/majestic-heavy",
+    "source_url": "https://la2wiki.com/lu4/sets",
     "parts": [
       {
-        "slot": "Pechera",
+        "slot": "Armadura completa",
         "name": "Majestic Plate Armor",
         "recipe_result": "Sealed Majestic Plate Armor"
       },
@@ -53,7 +55,8 @@
         "slot": "Botas",
         "name": "Majestic Boots - Heavy Armor"
       }
-    ]
+    ],
+    "verified_source": true
   },
   {
     "name": "Majestic Light",
@@ -106,5 +109,216 @@
         "name": "Majestic Boots - Robe"
       }
     ]
+  },
+  {
+    "name": "Zubei Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "set_bonus": "STR +1 · HP +300 · P. Def. +6% · Reflect Melee +5% · Paralyze/Stone Resistance +30%",
+    "source_url": "https://la2wiki.com/lu4/set/zubei-heavy",
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Zubei's Breastplate"
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Zubei's Gaiters"
+      },
+      {
+        "slot": "Casco",
+        "name": "Zubei's Helmet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Zubei's Gauntlets - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Zubei's Boots - Heavy Armor"
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Zubei's Shield"
+      }
+    ],
+    "verified_source": true,
+    "total_pdef_reference": 641
+  },
+  {
+    "name": "Blue Wolf Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "set_bonus": "STR +3 · CON −1 · DEX −2 · Speed +7 · HP Regen +8% · Shock Resistance +30%",
+    "source_url": "https://la2wiki.com/lu4/set/blue-wolf-set",
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Blue Wolf Breastplate"
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Blue Wolf Gaiters"
+      },
+      {
+        "slot": "Casco",
+        "name": "Blue Wolf Helmet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Blue Wolf Gloves - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Blue Wolf Boots - Heavy Armor"
+      }
+    ],
+    "verified_source": true,
+    "total_pdef_reference": 682
+  },
+  {
+    "name": "Avadon Heavy",
+    "grade": "B",
+    "armor_type": "heavy",
+    "set_bonus": "CON +1 · HP +300 · M. Def. +8% · Mental Resistance +30%",
+    "source_url": "https://la2wiki.com/lu4/set/avadon-set",
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Avadon Breastplate"
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Avadon Gaiters"
+      },
+      {
+        "slot": "Casco",
+        "name": "Avadon Circlet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Avadon Gloves - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Avadon Boots - Heavy Armor"
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Avadon Shield"
+      }
+    ],
+    "verified_source": true,
+    "total_pdef_reference": 641
+  },
+  {
+    "name": "Dark Crystal Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "set_bonus": "CON +2 · DEX +1 · Casting Spd. +15% · Heal Received +8% · MP Regen +20% · Paralyze Resistance +50% · Medusa +30%",
+    "source_url": "https://la2wiki.com/lu4/set/dark-crystal-heavy",
+    "parts": [
+      {
+        "slot": "Pechera",
+        "name": "Dark Crystal Breastplate"
+      },
+      {
+        "slot": "Pantalón",
+        "name": "Dark Crystal Gaiters"
+      },
+      {
+        "slot": "Casco",
+        "name": "Dark Crystal Helmet"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Dark Crystal Gloves - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Dark Crystal Boots - Heavy Armor"
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Dark Crystal Shield"
+      }
+    ],
+    "verified_source": true,
+    "total_pdef_reference": 707
+  },
+  {
+    "name": "Tallum Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "set_bonus": "STR +2 · Attack Spd. +8% · Weight Limit +6800 · Poison/Bleed Resistance +80% · Mental Resistance +50%",
+    "source_url": "https://la2wiki.com/lu4/set/tallum-set",
+    "parts": [
+      {
+        "slot": "Armadura completa",
+        "name": "Tallum Plate Armor"
+      },
+      {
+        "slot": "Casco",
+        "name": "Tallum Helm"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Tallum Gloves - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Tallum Boots - Heavy Armor"
+      }
+    ],
+    "verified_source": true,
+    "total_pdef_reference": 600
+  },
+  {
+    "name": "Nightmare Heavy",
+    "grade": "A",
+    "armor_type": "heavy",
+    "set_bonus": "CON +2 · MEN +1 · HP +380 · P. Def. +6% · M. Def. +6% · Sleep/Hold Resistance +70%",
+    "source_url": "https://la2wiki.com/lu4/set/nightmare-heavy",
+    "parts": [
+      {
+        "slot": "Armadura completa",
+        "name": "Armor of Nightmare"
+      },
+      {
+        "slot": "Casco",
+        "name": "Helm of Nightmare"
+      },
+      {
+        "slot": "Guantes",
+        "name": "Gauntlets of Nightmare - Heavy Armor"
+      },
+      {
+        "slot": "Botas",
+        "name": "Boots of Nightmare - Heavy Armor"
+      },
+      {
+        "slot": "Escudo opcional",
+        "name": "Shield of Nightmare"
+      }
+    ],
+    "verified_source": true,
+    "total_pdef_reference": 635
+  },
+  {
+    "name": "Full Plate",
+    "grade": "C",
+    "armor_type": "heavy",
+    "set_bonus": null,
+    "parts": [
+      {
+        "slot": "Armadura completa",
+        "name": "Full Plate Armor"
+      },
+      {
+        "slot": "Casco",
+        "name": "Full Plate Helmet"
+      }
+    ],
+    "verified_source": false
   }
 ]
