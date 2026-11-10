@@ -1,7 +1,7 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const db=createClient('https://exdbjmenogqmdsagtzsc.supabase.co','sb_publishable_aiD4YZk2gx8B1thwWfcB5Q_Zu9Y1UJO');
 const $=id=>document.getElementById(id), q=(el,sel)=>el?.querySelector(sel);
-let goalItems=[],goalSets=[],expandedRecipe=null;let data={items:[],recipes:[],sets:[],materials:[]},cursor={catalog:0,recipes:0,sets:0},filters={catalog:'',recipes:'',sets:''},user=null,party=null,balances=[],dbRecipes=[],dbIngredients=[];
+let goalItems=[],goalSets=[],expandedRecipe=null,craftQty=1;let data={items:[],recipes:[],sets:[],materials:[]},cursor={catalog:0,recipes:0,sets:0},filters={catalog:'',recipes:'',sets:''},user=null,party=null,balances=[],dbRecipes=[],dbIngredients=[];
 const safe=t=>String(t??''),slug=t=>safe(t).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const css=(el,n)=>el.classList.add(n);
 const node=(tag,value='',cls='')=>{const el=document.createElement(tag);el.textContent=safe(value);if(cls)el.className=cls;return el};
@@ -42,14 +42,14 @@ function card(obj,kind){
  c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito')+(obj.craft_level?' · Nivel '+obj.craft_level:'')+(obj.armor_type?' · '+obj.armor_type.toUpperCase():''),'meta'));
  if(Array.isArray(obj.ingredients)&&obj.ingredients.length){
    const details=document.createElement('details');details.className='recipe-detail';
-   const summary=node('summary','Ver '+obj.ingredients.length+' materiales necesarios');
+   const summary=node('summary','Ver '+obj.ingredients.length+' materiales para '+fmt(craftQty)+' crafteo(s)');
    details.append(summary);
    let complete=0;const ul=node('div','','source-list');for(const part of obj.ingredients){
      const name=part.name.replace('Crystal (B-Grade)','Crystal: B Grade').replace('Crystal (A-Grade)','Crystal: A Grade');
      const match=goalItems.find(i=>i.name?.toLowerCase()===name.toLowerCase()||i.name?.toLowerCase()===part.name.toLowerCase());
      const qty=match?balances.filter(b=>b.item_id===match.id).reduce((sum,b)=>sum+Number(b.quantity),0):0;
-     if(qty>=part.quantity)complete++;
-     const item=node('div',part.name+' — necesario '+fmt(part.quantity)+' · en CP '+fmt(qty)+(qty<part.quantity?' · faltan '+fmt(part.quantity-qty):' · completo'),'recipe-ingredient');
+     if(qty>=part.quantity*craftQty)complete++;
+     const need=part.quantity*craftQty;const item=node('div',part.name+' — necesito '+fmt(need)+' · CP: '+fmt(qty)+(qty<need?' · faltan '+fmt(need-qty):' · completo'),'recipe-ingredient');
      ul.append(item);
    }details.append(ul,node('small',complete+' / '+obj.ingredients.length+' tipos cubiertos','muted'));c.append(details)
  }
@@ -72,7 +72,12 @@ function mount(id){const host=$(id);if(!host)return null;const shell=node('div',
  if(id==='recipes'){
  const select=document.createElement('select');select.id='premium-recipe-kind';
  for(const [v,t] of [['','Todas las recetas'],['armor','Armaduras y sets'],['weapon','Armas'],['material','Materiales']]){const opt=node('option',t);opt.value=v;select.append(opt)}
- bar.append(select);select.onchange=()=>{cursor.recipes=0;paint('recipes')}
+ bar.append(select);select.onchange=()=>{cursor.recipes=0;paint('recipes')};
+ const armorSelect=document.createElement('select');armorSelect.id='premium-armor-type';
+ for(const [v,t] of [['','Heavy / Light / Robe'],['heavy','Heavy'],['light','Light'],['robe','Robe']]){const o=node('option',t);o.value=v;armorSelect.append(o)}
+ bar.append(armorSelect);armorSelect.onchange=()=>{cursor.recipes=0;paint('recipes')};
+ const quantity=document.createElement('input');quantity.type='number';quantity.min='1';quantity.max='1000';quantity.step='1';quantity.value=String(craftQty);quantity.title='Cantidad de crafteos';quantity.placeholder='Cantidad a fabricar';bar.append(quantity);
+ quantity.oninput=()=>{const n=Number(quantity.value);if(Number.isSafeInteger(n)&&n>=1&&n<=1000){craftQty=n;paint('recipes')}}
 }
  if(id==='catalog'){const select=document.createElement('select');select.id='premium-category';for(const [v,t] of [['','Todas las categorías'],['material','Materiales'],['weapon','Armas'],['armor','Armaduras'],['jewelry','Joyas'],['recipe_item','Recetas'],['scroll','Scrolls'],['potion','Pociones'],['shot','Shots y flechas'],['spellbook','Spellbooks']]){const opt=node('option',t);opt.value=v;select.append(opt)}bar.append(select);select.onchange=()=>{cursor.catalog=0;paint('catalog')}}else if(id==='sets'){const select=document.createElement('select');select.id='premium-grade';for(const v of ['Todos los grados','S','A','B','C','D','NG']){const o=node('option',v);o.value=v==='Todos los grados'?'':v;select.append(o)}bar.append(select);select.onchange=()=>{cursor.sets=0;paint('sets')}}
  const counter=node('div','','small muted'),grid=node('div','','premium-grid'),foot=node('div','','premium-footer');
@@ -85,7 +90,9 @@ function paint(id){
   const kind=$('premium-recipe-kind').value;const text=(x.result||x.name||'').toLowerCase();
   const category=x.kind||(/^recipe:/.test(text)&&(/armor|boots|gloves|helmet|gaiters|robe|leather|shield|circlet|tunic|stockings/.test(text))?'armor':/bow|sword|dagger|staff|mace|spear|blade|axe|lance|fist|hammer/.test(text)?'weapon':'material');
   if(category!==kind)return false;
+ if($('premium-armor-type')?.value&&x.armor_type!==$('premium-armor-type').value)return false;
  }
+ if(id==='recipes'&&!$('premium-recipe-kind')?.value&&$('premium-armor-type')?.value&&x.armor_type!==$('premium-armor-type').value)return false;
  if(id==='catalog'&&$('premium-category')?.value&&x.category!==$('premium-category').value)return false;if(id==='sets'&&$('premium-grade')?.value&&x.grade!==$('premium-grade').value)return false;return true});
  const limit=60;cursor[id]=Math.max(0,Math.min(cursor[id],Math.max(0,Math.ceil(filtered.length/limit)-1)));const start=cursor[id]*limit;const h=containers[id];if(!h)return;h.grid.replaceChildren();h.foot.replaceChildren();
  for(const obj of filtered.slice(start,start+limit))h.grid.append(card(obj,id));if(!filtered.length)h.grid.append(node('div','No se encontraron resultados.','premium-empty'));
