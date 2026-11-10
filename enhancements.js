@@ -12,7 +12,7 @@ const typeIcon={material:'⬡',recipe_item:'♜',weapon:'⚔',armor:'♞',jewelr
 async function json(path){try{const r=await fetch(path,{cache:'no-store'});if(!r.ok)return null;return await r.json()}catch{return null}}
 async function paged(table,columns,max=9000){const out=[];for(let start=0;start<max;start+=1000){const {data,error}=await db.from(table).select(columns).range(start,start+999);if(error)break;out.push(...data);if(data.length<1000)break}return out}
 async function syncCatalog(){
- const [a,b,c,d,featured,featuredSets,icons,jewelry,moreArmor,moreWeapons,jewelryRecipes]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json','data/icons.json','data/jewelry.json','data/recipe-index-cba.json','data/weapon-recipes-cba.json','data/jewelry-recipes-cba.json'].map(json));
+ const [a,b,c,d,featured,featuredSets,icons,jewelry,moreArmor,moreWeapons,jewelryRecipes,guideSets]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json','data/icons.json','data/jewelry.json','data/recipe-index-cba.json','data/weapon-recipes-cba.json','data/jewelry-recipes-cba.json','data/lu4-cba-guide-sets.json'].map(json));
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
  data.icons=icons&&typeof icons==='object'?icons:{byId:{},byName:{}};
  data.jewelry=Array.isArray(jewelry)?jewelry.filter(j=>['C','B','A'].includes(j.grade)||j.epic):[];
@@ -20,6 +20,7 @@ async function syncCatalog(){
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
  if(!data.recipes.length){const rows=(await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified')).filter(r=>r.verified);data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id)+' ('+Math.round(Number(r.success_rate)*100)+'%)',result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
  if(Array.isArray(featuredSets)){for(const set of featuredSets){const ix=data.sets.findIndex(x=>x.name.toLowerCase()===set.name.toLowerCase());if(ix>=0)data.sets[ix]={...data.sets[ix],...set};else data.sets.push(set)}}
+ if(Array.isArray(guideSets)){for(const g of guideSets){const ix=data.sets.findIndex(x=>x.name.toLowerCase()===g.name.toLowerCase());if(ix<0)data.sets.push(g);else {const old=data.sets[ix];data.sets[ix]={...old,...g,parts:g.parts?.length?g.parts:(old.parts||[])};}}}
  if(Array.isArray(featured)){const known=new Set(data.recipes.map(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()));for(const recipe of featured){const k=recipe.name.toLowerCase().replace(/\s+/g,' ').trim();if(!known.has(k)){data.recipes.push(recipe);known.add(k)}else{const idx=data.recipes.findIndex(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()===k);if(idx>=0&&!data.recipes[idx].ingredients?.length)data.recipes[idx]={...data.recipes[idx],...recipe}}}}
  const extra=[...(Array.isArray(moreArmor)?moreArmor:[]),...(Array.isArray(moreWeapons)?moreWeapons:[]),...(Array.isArray(jewelryRecipes)?jewelryRecipes:[])];
  const recipeKeys=new Set(data.recipes.map(r=>[r.result,r.success_rate,r.grade].join('|').toLowerCase()));
@@ -46,7 +47,7 @@ const chestBySet={'zubei heavy':'Zubei Breastplate','blue wolf heavy':'Blue Wolf
 function setPlaceholder(item){const e=node('div','','premium-icon set-portrait');e.classList.add('grade-'+safe(item.grade||'').toLowerCase(),'type-'+safe(item.armor_type||'heavy').toLowerCase());const letters=safe(item.name).split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase();const wrap=node('div');wrap.append(node('div',letters,'set-symbol'),node('div',safe(item.grade||'—'),'set-symbol-mark'));e.append(wrap);e.title=safe(item.name);return e}
 function imgIcon(item){
  const icon=node('div','','premium-icon');
- const isSet=!!item.armor_type&&item.category==='armor'; const names=[chestBySet[safe(item.name).toLowerCase()],item.parts?.find(p=>p.slot==='Pechera'||p.slot==='Robe')?.recipe_result,item.parts?.[0]?.name,item.name,item.result].filter(Boolean);
+ const isSet=!!item.armor_type&&item.category==='armor'; const names=[item.primary_item,chestBySet[safe(item.name).toLowerCase()],item.parts?.find(p=>p.slot==='Pechera'||p.slot==='Túnica'||p.slot==='Armadura completa'||p.slot==='Robe')?.recipe_result,item.parts?.[0]?.name,item.name,item.result].filter(Boolean);
  const norm=n=>safe(n).trim().toLowerCase().replace(/\s+/g,' ');
  const candidates=names.map(n=>data.icons?.byName?.[norm(n)]).filter(Boolean);
  const url=candidates[0]||data.icons?.byId?.[String(item.game_item_id||'')]||item.icon_url||item.image_url;
@@ -101,7 +102,7 @@ function jewelryCard(obj){
  if(obj.total_pdef_reference)c.append(node('div','Defensa física de referencia: '+fmt(obj.total_pdef_reference)+' P. Def.','meta'));
  if(Array.isArray(obj.parts)&&obj.parts.length){
   const details=document.createElement('details');details.className='recipe-detail';
-  details.append(node('summary','Ver '+obj.parts.length+' piezas del set'));
+  details.append(node('summary','Ver '+obj.parts.filter(p=>!p.optional).length+' piezas del set'+(obj.parts.some(p=>p.optional)?' y accesorios opcionales':'')));
   const list=node('div','','source-list');
   for(const part of obj.parts){
     const line=node('div','','recipe-ingredient');
