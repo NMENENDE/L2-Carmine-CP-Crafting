@@ -35,18 +35,20 @@ function vectorIcon(item){
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 48 48');svg.setAttribute('width','36');svg.setAttribute('height','36');svg.setAttribute('aria-hidden','true');
  const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','assets/icons.svg#'+key);svg.append(use);return svg;
 }
+const chestBySet={'zubei heavy':'Zubei Breastplate','blue wolf heavy':'Blue Wolf Breastplate','avadon heavy':'Avadon Breastplate','full plate':'Full Plate Armor','dark crystal heavy':'Dark Crystal Breastplate','tallum heavy':'Tallum Plate Armor','nightmare heavy':'Armor of Nightmare','doom heavy':'Doom Plate Armor','majestic heavy':'Majestic Plate Armor','majestic light':'Majestic Leather Armor','majestic robe':'Majestic Robe'};
+function setPlaceholder(item){const e=node('div','','premium-icon set-portrait');e.classList.add('grade-'+safe(item.grade||'').toLowerCase(),'type-'+safe(item.armor_type||'heavy').toLowerCase());const letters=safe(item.name).split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase();const wrap=node('div');wrap.append(node('div',letters,'set-symbol'),node('div',safe(item.grade||'—'),'set-symbol-mark'));e.append(wrap);e.title=safe(item.name);return e}
 function imgIcon(item){
  const icon=node('div','','premium-icon');
- const names=[item.name,item.result,item.parts?.find(p=>p.slot==='Pechera'||p.slot==='Robe')?.recipe_result,item.parts?.[0]?.name].filter(Boolean);
+ const isSet=!!item.armor_type&&item.category==='armor'; const names=[chestBySet[safe(item.name).toLowerCase()],item.parts?.find(p=>p.slot==='Pechera'||p.slot==='Robe')?.recipe_result,item.parts?.[0]?.name,item.name,item.result].filter(Boolean);
  const norm=n=>safe(n).trim().toLowerCase().replace(/\s+/g,' ');
  const candidates=names.map(n=>data.icons?.byName?.[norm(n)]).filter(Boolean);
  const url=candidates[0]||data.icons?.byId?.[String(item.game_item_id||'')]||item.icon_url||item.image_url;
  if(url&&/^https:\/\//.test(url)){
    const image=document.createElement('img');
    image.src=url;image.loading='lazy';image.alt='';image.decoding='async';
-   image.onerror=()=>{icon.replaceChildren(vectorIcon(item))};
+   image.onerror=()=>{if(isSet)icon.replaceWith(setPlaceholder(item));else icon.replaceChildren(vectorIcon(item))};
    icon.append(image);
- }else icon.append(vectorIcon(item));
+ }else if(isSet)return setPlaceholder(item);else icon.append(vectorIcon(item));
  return icon
 }
 function card(obj,kind){
