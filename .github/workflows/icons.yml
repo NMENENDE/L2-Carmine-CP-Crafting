@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/import_item_icons.py'
+      - '.github/workflows/icons.yml'
   schedule:
     - cron: '10 9 1 * *'
 permissions:
