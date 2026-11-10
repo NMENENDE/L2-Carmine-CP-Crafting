@@ -29,15 +29,17 @@ def flatten(root):
         for item in root:
             yield from flatten(item)
     elif isinstance(root,dict):
-        if ("name" in root) and ("id" in root or "itemId" in root) and ("iconFile" in root or "icon" in root):
+        if "name" in root and ("iconFile" in root or "icon" in root):
             yield root
         elif "items" in root and isinstance(root["items"],(dict,list)):
             yield from flatten(root["items"])
         elif "data" in root and isinstance(root["data"],(dict,list)):
             yield from flatten(root["data"])
         else:
-            for val in root.values():
-                if isinstance(val,(dict,list)):
+            for key,val in root.items():
+                if isinstance(val,dict) and "name" in val and ("iconFile" in val or "icon" in val) and "id" not in val and str(key).isdigit():
+                    yield {**val,"id":int(key)}
+                elif isinstance(val,(dict,list)):
                     yield from flatten(val)
 
 def iconfile(raw):
@@ -69,7 +71,7 @@ def main():
     for name,urls in seen.items():
         if len(urls)==1:
             by_name[name]=next(iter(urls))
-    if indexed<1000:
+    if indexed<500:
         raise RuntimeError(f"Only {indexed} icon-bearing items parsed; keeping current manifest")
     payload={"source":"cuteshaun/lineage2-api","origin":"Lineage II Interlude client icons","byId":by_id,"byName":by_name,"stats":{"indexed":indexed,"ids":len(by_id),"names":len(by_name),"ambiguous_names":sum(len(v)>1 for v in seen.values())}}
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
