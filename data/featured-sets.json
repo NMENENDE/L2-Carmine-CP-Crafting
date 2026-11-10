@@ -27,9 +27,7 @@
         "slot": "Escudo opcional",
         "name": "Doom Shield"
       }
-    ],
-    "verified_source": true,
-    "total_pdef_reference": 578
+    ]
   },
   {
     "name": "Majestic Heavy",
@@ -55,8 +53,7 @@
         "slot": "Botas",
         "name": "Majestic Boots - Heavy Armor"
       }
-    ],
-    "verified_source": true
+    ]
   },
   {
     "name": "Majestic Light",
@@ -141,9 +138,7 @@
         "slot": "Escudo opcional",
         "name": "Zubei's Shield"
       }
-    ],
-    "verified_source": true,
-    "total_pdef_reference": 641
+    ]
   },
   {
     "name": "Blue Wolf Heavy",
@@ -172,9 +167,7 @@
         "slot": "Botas",
         "name": "Blue Wolf Boots - Heavy Armor"
       }
-    ],
-    "verified_source": true,
-    "total_pdef_reference": 682
+    ]
   },
   {
     "name": "Avadon Heavy",
@@ -207,9 +200,7 @@
         "slot": "Escudo opcional",
         "name": "Avadon Shield"
       }
-    ],
-    "verified_source": true,
-    "total_pdef_reference": 641
+    ]
   },
   {
     "name": "Dark Crystal Heavy",
@@ -242,9 +233,7 @@
         "slot": "Escudo opcional",
         "name": "Dark Crystal Shield"
       }
-    ],
-    "verified_source": true,
-    "total_pdef_reference": 707
+    ]
   },
   {
     "name": "Tallum Heavy",
@@ -269,9 +258,7 @@
         "slot": "Botas",
         "name": "Tallum Boots - Heavy Armor"
       }
-    ],
-    "verified_source": true,
-    "total_pdef_reference": 600
+    ]
   },
   {
     "name": "Nightmare Heavy",
@@ -300,9 +287,7 @@
         "slot": "Escudo opcional",
         "name": "Shield of Nightmare"
       }
-    ],
-    "verified_source": true,
-    "total_pdef_reference": 635
+    ]
   },
   {
     "name": "Full Plate",
@@ -318,7 +303,6 @@
         "slot": "Casco",
         "name": "Full Plate Helmet"
       }
-    ],
-    "verified_source": false
+    ]
   }
 ]
