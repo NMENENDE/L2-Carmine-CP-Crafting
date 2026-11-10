@@ -1,0 +1,186 @@
+[
+  {
+    "name": "Recipe: Doom Plate Armor (60%)",
+    "result": "Doom Plate Armor",
+    "grade": "B",
+    "craft_level": 7,
+    "success_rate": 0.6,
+    "mp_cost": 183,
+    "output_quantity": 1,
+    "armor_type": "heavy",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/doom-plate-armor",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 100000
+      },
+      {
+        "name": "Crystal (B-Grade)",
+        "quantity": 60
+      },
+      {
+        "name": "Mithril Alloy",
+        "quantity": 45
+      },
+      {
+        "name": "Gemstone B",
+        "quantity": 31
+      },
+      {
+        "name": "Asofe",
+        "quantity": 30
+      },
+      {
+        "name": "Varnish of Purity",
+        "quantity": 15
+      },
+      {
+        "name": "Doom Plate Armor Temper",
+        "quantity": 13
+      },
+      {
+        "name": "Blacksmith's Frame",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Doom Plate Armor (100%)",
+    "result": "Doom Plate Armor",
+    "grade": "B",
+    "craft_level": 7,
+    "success_rate": 1,
+    "mp_cost": 183,
+    "output_quantity": 1,
+    "armor_type": "heavy",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/doom-plate-armor",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 100000
+      },
+      {
+        "name": "Crystal (B-Grade)",
+        "quantity": 136
+      },
+      {
+        "name": "Mithril Alloy",
+        "quantity": 69
+      },
+      {
+        "name": "Asofe",
+        "quantity": 46
+      },
+      {
+        "name": "Gemstone B",
+        "quantity": 31
+      },
+      {
+        "name": "Varnish of Purity",
+        "quantity": 23
+      },
+      {
+        "name": "Doom Plate Armor Temper",
+        "quantity": 13
+      },
+      {
+        "name": "Maestro Mold",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Sealed Majestic Plate Armor (60%)",
+    "result": "Sealed Majestic Plate Armor",
+    "grade": "A",
+    "craft_level": 9,
+    "success_rate": 0.6,
+    "mp_cost": 201,
+    "output_quantity": 1,
+    "armor_type": "heavy",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/sealed-majestic-plate-armor",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 300000
+      },
+      {
+        "name": "Crystal (A-Grade)",
+        "quantity": 210
+      },
+      {
+        "name": "Mithril Alloy",
+        "quantity": 148
+      },
+      {
+        "name": "Asofe",
+        "quantity": 99
+      },
+      {
+        "name": "Gemstone A",
+        "quantity": 84
+      },
+      {
+        "name": "Varnish of Purity",
+        "quantity": 49
+      },
+      {
+        "name": "Sealed Majestic Plate Armor Pattern",
+        "quantity": 20
+      },
+      {
+        "name": "Arcsmith's Anvil",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Sealed Majestic Plate Armor (100%)",
+    "result": "Sealed Majestic Plate Armor",
+    "grade": "A",
+    "craft_level": 8,
+    "success_rate": 1,
+    "mp_cost": 201,
+    "output_quantity": 1,
+    "armor_type": "heavy",
+    "kind": "armor",
+    "source_url": "https://la2wiki.com/lu4/item/sealed-majestic-plate-armor",
+    "ingredients": [
+      {
+        "name": "Adena",
+        "quantity": 250000
+      },
+      {
+        "name": "Mithril Alloy",
+        "quantity": 141
+      },
+      {
+        "name": "Crystal (A-Grade)",
+        "quantity": 104
+      },
+      {
+        "name": "Asofe",
+        "quantity": 94
+      },
+      {
+        "name": "Varnish of Purity",
+        "quantity": 47
+      },
+      {
+        "name": "Gemstone A",
+        "quantity": 23
+      },
+      {
+        "name": "Sealed Majestic Plate Armor Pattern",
+        "quantity": 14
+      },
+      {
+        "name": "Arcsmith's Anvil",
+        "quantity": 4
+      }
+    ]
+  }
+]
