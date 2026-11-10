@@ -12,8 +12,9 @@ const typeIcon={material:'⬡',recipe_item:'♜',weapon:'⚔',armor:'♞',jewelr
 async function json(path){try{const r=await fetch(path,{cache:'no-store'});if(!r.ok)return null;return await r.json()}catch{return null}}
 async function paged(table,columns,max=9000){const out=[];for(let start=0;start<max;start+=1000){const {data,error}=await db.from(table).select(columns).range(start,start+999);if(error)break;out.push(...data);if(data.length<1000)break}return out}
 async function syncCatalog(){
- const [a,b,c,d,featured,featuredSets]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json'].map(json));
+ const [a,b,c,d,featured,featuredSets,icons]=await Promise.all(['data/items.json','data/recipes.json','data/sets.json','data/materials.json','data/featured-recipes.json','data/featured-sets.json','data/icons.json'].map(json));
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
+ data.icons=icons&&typeof icons==='object'?icons:{byId:{},byName:{}};
  if(!data.items.length){data.items=await paged('items','id,name,grade,category,icon_url,source_url,verified');}
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
  if(!data.recipes.length){const rows=(await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified')).filter(r=>r.verified);data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id)+' ('+Math.round(Number(r.success_rate)*100)+'%)',result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
@@ -34,7 +35,7 @@ function vectorIcon(item){
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 48 48');svg.setAttribute('width','36');svg.setAttribute('height','36');svg.setAttribute('aria-hidden','true');
  const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','assets/icons.svg#'+key);svg.append(use);return svg;
 }
-function imgIcon(item){const icon=node('div','', 'premium-icon'),url=item.icon_url||item.image_url;if(url&&/^https:\/\//.test(url)){const image=document.createElement('img');image.src=url;image.loading='lazy';image.alt='';image.onerror=()=>{icon.replaceChildren(node('span',typeIcon[item.category]||'✦'))};icon.append(image)}else{icon.append(vectorIcon(item))}return icon}
+function imgIcon(item){const icon=node('div','', 'premium-icon'),url=data.icons?.byId?.[String(item.game_item_id||item.id||'')]||data.icons?.byName?.[safe(item.name||item.result).trim().toLowerCase().replace(/\s+/g,' ')]||item.icon_url||item.image_url;if(url&&/^https:\/\//.test(url)){const image=document.createElement('img');image.src=url;image.loading='lazy';image.alt='';image.onerror=()=>{icon.replaceChildren(vectorIcon(item))};icon.append(image)}else{icon.append(vectorIcon(item))}return icon}
 function card(obj,kind){
  const c=node('article','','premium-card'),head=node('div','','premium-head'),right=node('div');
  const item={...obj,category:kind==='sets'?'armor':kind==='recipes'?'recipe_item':obj.category};
