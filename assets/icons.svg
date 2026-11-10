@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+<defs>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5dfac"/><stop offset="1" stop-color="#a87536"/></linearGradient>
+<linearGradient id="iron" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c8deeb"/><stop offset="1" stop-color="#507086"/></linearGradient>
+<linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffa888"/><stop offset="1" stop-color="#9c3c41"/></linearGradient>
+<linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b6e5a1"/><stop offset="1" stop-color="#3b785e"/></linearGradient></defs>
+<symbol id="ore" viewBox="0 0 48 48"><path d="M5 30 15 11 31 7 44 21 39 38 16 43Z" fill="url(#iron)" stroke="#edf4fc" stroke-width="1.5"/><path d="m15 11 9 14 20-4M24 25l-8 18m8-18 15 13" stroke="#22364b" stroke-width="2" fill="none"/></symbol>
+<symbol id="bone" viewBox="0 0 48 48"><path d="M6 13c-3-6 6-11 10-5l15 20c8-5 14 1 10 7-2 3-5 4-8 2l-2 4c-5 6-12 0-9-6L7 19c-3 0-4-3-1-6Z" fill="#e8dec9" stroke="#ac9a7d" stroke-width="2"/></symbol>
+<symbol id="fabric" viewBox="0 0 48 48"><path d="m10 7 10 5 16-6-3 35-11-7-14 6Z" fill="url(#green)" stroke="#d4f2be" stroke-width="1.4"/><path d="m17 11-2 24M27 11l-2 26" stroke="#2e5c4b" stroke-width="2" opacity=".65"/></symbol>
+<symbol id="metal" viewBox="0 0 48 48"><path d="m9 26 7-15h23l-6 15-7 12H3Z" fill="url(#iron)" stroke="#d8e9f5" stroke-width="2"/><path d="m9 26 24 0M16 11l10 27" stroke="#263d53" stroke-width="1.8"/></symbol>
+<symbol id="scroll" viewBox="0 0 48 48"><path d="M12 7h26c-4 3-5 7-5 12v20H9c4-5 5-10 5-15Z" fill="#dac18d" stroke="#aa8551" stroke-width="2"/><path d="M12 7c6-2 8 5 4 8H8c-4-4-2-9 4-8Z" fill="#f4dfb4" stroke="#aa8551" stroke-width="2"/><path d="M18 21h11M18 26h10M18 31h7" stroke="#805e41" stroke-width="2"/></symbol>
+<symbol id="weapon" viewBox="0 0 48 48"><path d="m34 4 8 3-20 25-5-5Z" fill="url(#iron)" stroke="#dfe8f5" stroke-width="1.5"/><path d="m17 27 7 7M10 25l13 13m-10-6L4 43" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/></symbol>
+<symbol id="armor" viewBox="0 0 48 48"><path d="m13 5 11 5 11-5 8 12-7 8-3 16H15L12 25l-7-8Z" fill="url(#iron)" stroke="#e4f0fb" stroke-width="2"/><path d="m24 10 0 29M12 25l12 6 12-6" fill="none" stroke="#465c77" stroke-width="3"/></symbol>
+<symbol id="gem" viewBox="0 0 48 48"><path d="m12 11 24 0 9 12-21 21L3 23Z" fill="url(#red)" stroke="#ffd3c6" stroke-width="2"/><path d="m12 11 12 12 12-12M3 23h42M24 23v21" stroke="#f8beb4" stroke-width="2" fill="none"/></symbol>
+<symbol id="potion" viewBox="0 0 48 48"><path d="M18 5h12v7l-4 3v5c15 7 15 22-2 22S7 27 22 20v-5l-4-3Z" fill="url(#green)" stroke="#d5ead6" stroke-width="2"/><path d="M18 5h12v7H18Z" fill="#9c7a52"/><path d="M14 30c6 5 14 7 20 0" stroke="#eaf8e3" stroke-width="2" fill="none"/></symbol>
+<symbol id="rune" viewBox="0 0 48 48"><path d="M24 2 43 13v22L24 46 5 35V13Z" fill="#273955" stroke="url(#gold)" stroke-width="2.5"/><path d="m14 35 10-25 10 25M17 27h14" fill="none" stroke="#edd29a" stroke-width="3"/></symbol>
+</svg>
