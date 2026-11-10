@@ -1,6 +1,10 @@
 name: Import LU4 catalogue
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/catalog_import.py'
   schedule:
     - cron: '0 9 1 * *'
 permissions:
