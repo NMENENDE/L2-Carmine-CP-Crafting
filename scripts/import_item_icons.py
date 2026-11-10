@@ -76,6 +76,7 @@ def main():
     payload={"source":"cuteshaun/lineage2-api","origin":"Lineage II Interlude client icons","byId":by_id,"byName":by_name,"stats":{"indexed":indexed,"ids":len(by_id),"names":len(by_name),"ambiguous_names":sum(len(v)>1 for v in seen.values())}}
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     OUTPUT.write_text(json.dumps(payload,ensure_ascii=False,separators=(",",":"))+"\n",encoding="utf-8")
+    (OUTPUT.parent/"icons-stats.json").write_text(json.dumps(payload["stats"],indent=2)+"\n",encoding="utf-8")
     print("Icon catalog entries:", payload["stats"])
 
 if __name__=="__main__":
