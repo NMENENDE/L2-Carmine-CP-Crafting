@@ -382,5 +382,193 @@
         "quantity": 2
       }
     ]
+  },
+  {
+    "name": "Recipe: Saint Spear (100%)",
+    "result": "Saint Spear",
+    "grade": "S",
+    "craft_level": 9,
+    "success_rate": 1,
+    "mp_cost": 225,
+    "output_quantity": 1,
+    "kind": "weapon",
+    "source_url": "https://la2wiki.com/lu4/item/saint-spear",
+    "ingredients": [
+      {
+        "name": "Mithril Alloy",
+        "quantity": 464
+      },
+      {
+        "name": "Durable Metal Plate",
+        "quantity": 464
+      },
+      {
+        "name": "Crystal (S-Grade)",
+        "quantity": 395
+      },
+      {
+        "name": "Synthetic Cokes",
+        "quantity": 232
+      },
+      {
+        "name": "High-Grade Suede",
+        "quantity": 116
+      },
+      {
+        "name": "Enria",
+        "quantity": 116
+      },
+      {
+        "name": "Gemstone S",
+        "quantity": 43
+      },
+      {
+        "name": "Saint Spear Blade",
+        "quantity": 17
+      },
+      {
+        "name": "Warsmith's Holder",
+        "quantity": 8
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Saint Spear (60%)",
+    "result": "Saint Spear",
+    "grade": "S",
+    "craft_level": 9,
+    "success_rate": 0.6,
+    "mp_cost": 225,
+    "output_quantity": 1,
+    "kind": "weapon",
+    "source_url": "https://la2wiki.com/lu4/item/saint-spear",
+    "ingredients": [
+      {
+        "name": "Mithril Alloy",
+        "quantity": 248
+      },
+      {
+        "name": "Durable Metal Plate",
+        "quantity": 248
+      },
+      {
+        "name": "Crystal (S-Grade)",
+        "quantity": 214
+      },
+      {
+        "name": "Synthetic Cokes",
+        "quantity": 124
+      },
+      {
+        "name": "High-Grade Suede",
+        "quantity": 62
+      },
+      {
+        "name": "Enria",
+        "quantity": 62
+      },
+      {
+        "name": "Gemstone S",
+        "quantity": 43
+      },
+      {
+        "name": "Saint Spear Blade",
+        "quantity": 17
+      },
+      {
+        "name": "Warsmith's Holder",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Angel Slayer (100%)",
+    "result": "Angel Slayer",
+    "grade": "S",
+    "craft_level": 9,
+    "success_rate": 1,
+    "mp_cost": 225,
+    "output_quantity": 1,
+    "kind": "weapon",
+    "source_url": "https://la2wiki.com/lu4/item/angel-slayer",
+    "ingredients": [
+      {
+        "name": "Mithril Alloy",
+        "quantity": 486
+      },
+      {
+        "name": "Synthetic Cokes",
+        "quantity": 486
+      },
+      {
+        "name": "Crystal (S-Grade)",
+        "quantity": 399
+      },
+      {
+        "name": "Durable Metal Plate",
+        "quantity": 243
+      },
+      {
+        "name": "Enria",
+        "quantity": 243
+      },
+      {
+        "name": "Gemstone S",
+        "quantity": 43
+      },
+      {
+        "name": "Angel Slayer Blade",
+        "quantity": 17
+      },
+      {
+        "name": "Warsmith's Holder",
+        "quantity": 8
+      }
+    ]
+  },
+  {
+    "name": "Recipe: Angel Slayer (60%)",
+    "result": "Angel Slayer",
+    "grade": "S",
+    "craft_level": 9,
+    "success_rate": 0.6,
+    "mp_cost": 225,
+    "output_quantity": 1,
+    "kind": "weapon",
+    "source_url": "https://la2wiki.com/lu4/item/angel-slayer",
+    "ingredients": [
+      {
+        "name": "Mithril Alloy",
+        "quantity": 264
+      },
+      {
+        "name": "Synthetic Cokes",
+        "quantity": 264
+      },
+      {
+        "name": "Crystal (S-Grade)",
+        "quantity": 211
+      },
+      {
+        "name": "Durable Metal Plate",
+        "quantity": 132
+      },
+      {
+        "name": "Enria",
+        "quantity": 132
+      },
+      {
+        "name": "Gemstone S",
+        "quantity": 43
+      },
+      {
+        "name": "Angel Slayer Blade",
+        "quantity": 17
+      },
+      {
+        "name": "Warsmith's Holder",
+        "quantity": 4
+      }
+    ]
   }
 ]
