@@ -24,7 +24,7 @@ jobs:
         run: |
           git config user.name "carmine-icon-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/icons.json
+          git add data/icons.json data/icons-stats.json
           if ! git diff --cached --quiet; then
             git commit -m "data: sync indexed original Lineage II icons"
             git push
