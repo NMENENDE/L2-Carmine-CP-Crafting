@@ -191,7 +191,22 @@ function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();
 async function syncGoals(){if(!user||!party||!$('goals'))return;if(!$('goals')._list)goalsUI();const {data:goals,error}=await db.from('crafting_projects').select('id,title,status,priority,target_item_id,target_set_id').eq('party_id',party).order('priority',{ascending:true});if(error){message(error.message);return}
  if(!dbRecipes.length){dbRecipes=await paged('recipes','id,output_item_id,output_quantity,success_rate,verified');dbIngredients=await paged('recipe_ingredients','recipe_id,item_id,quantity')}
  const list=$('goals')._list;list.replaceChildren();if(!goals?.length){list.append(node('div','Todavía no hay objetivos registrados.','premium-empty'));return}
- for(const g of goals){const box=node('div','','premium-box'),top=node('div','','goal-title');top.append(node('h3',g.title),node('span',({'pending':'Pendiente','gathering':'Reuniendo materiales','ready':'Listo','crafting':'Crafteando','completed':'Crafteado ✓','cancelled':'Cancelado'})[g.status]||'Pendiente','tag'));box.append(top);
+ for(const g of goals){const box=node('div','','premium-box'),top=node('div','','goal-title'),status=node('span',({'pending':'Pendiente','gathering':'Reuniendo materiales','ready':'Listo','crafting':'Crafteando','completed':'Crafteado ✓','cancelled':'Cancelado'})[g.status]||'Pendiente','tag goal-status');
+const title=node('h3',g.title),actions=node('div','','goal-actions');actions.append(status);
+if(g.status!=='completed'){
+ const remove=button('Eliminar',async()=>{
+  if(!confirm('¿Eliminar el objetivo «'+g.title+'» de la CP? Los materiales del inventario no se modificarán.'))return;
+  remove.disabled=true;
+  const {error}=await db.rpc('delete_cp_goal',{p_project:g.id});
+  if(error){remove.disabled=false;return message('No se pudo eliminar: '+error.message)}
+  message('Objetivo eliminado de la CP.');
+  await syncGoals();
+ });
+ remove.className='goal-delete';
+ remove.setAttribute('aria-label','Eliminar objetivo '+g.title);
+ actions.append(remove);
+}
+top.append(title,actions);box.append(top);
  if(g.target_item_id){const recipe=dbRecipes.find(r=>r.output_item_id===g.target_item_id&&r.verified);if(recipe){const ingredients=dbIngredients.filter(i=>i.recipe_id===recipe.id);let ok=0,needed=0;for(const ing of ingredients){const owned=balances.filter(b=>b.item_id===ing.item_id).reduce((s,b)=>s+Number(b.quantity),0);const available=Math.min(owned,ing.quantity);ok+=available;needed+=Number(ing.quantity);const item=data.items.find(i=>i.id===ing.item_id);box.append(node('div',(item?.name||'Ítem '+ing.item_id)+' · '+fmt(owned)+' / '+fmt(ing.quantity),'small muted'))}if(needed){const meter=node('div','','meter'),bar=node('span');bar.style.width=Math.round(100*ok/needed)+'%';meter.append(bar);box.append(meter,node('div',Math.round(100*ok/needed)+'% de ingredientes disponibles','small'));
 if(g.status!=='completed'&&g.status!=='cancelled'){
  const eligible=await db.from('inventory_locations').select('id,name,owner_user_id,character_id').eq('party_id',party).neq('name','Ubicación histórica (sin uso)');
