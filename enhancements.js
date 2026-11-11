@@ -214,9 +214,8 @@ async function syncGoals(){if(!user||!party||!$('goals'))return;if(!$('goals')._
  list.append(box)
  }
 }
-async function syncInventory(){if(!user||!party)return;const {data:locs}=await db.from('inventory_locations').select('id,name,owner_user_id').eq('party_id',party);if(!locs?.some(l=>l.owner_user_id===user.id)){const {error}=await db.from('inventory_locations').insert({party_id:party,owner_user_id:user.id,name:'Inventario personal',location_type:'personal'});if(error)message('Ubicación: '+error.message)}
- const {data:bals}=await db.from('inventory_balances').select('item_id,quantity,location_id').eq('party_id',party);balances=bals||[];
-}
+async function syncInventory(){if(!user||!party)return;const {data:bals,error}=await db.from('inventory_balances').select('item_id,quantity,location_id').eq('party_id',party);if(error){message('Inventario: '+error.message);return}balances=bals||[]}
+
 function message(s){const n=$('notice');if(!n)return;n.textContent=s;n.style.display='block';setTimeout(()=>n.style.display='none',4000)}
 function boot(){
  const main=document.querySelector('.content');if(!main)return;const jewelryPage=node('section','','view hide');jewelryPage.id='jewelry';main.append(jewelryPage);const goals=node('section','','view hide');goals.id='goals';const farming=node('section','','view hide');farming.id='farming';farming.append(node('div','', 'panel'));const panel=farming.firstChild;panel.append(node('h2','Drop y Spoil · LU4'),node('p','Consultá monstruos, niveles, zonas y porcentajes en las fichas LU4.','muted'));panel.append(elink('Abrir catálogo de Drop ↗','https://lu4.click/en/drop/'),node('div',' · '),elink('Abrir catálogo de Spoil ↗','https://lu4.click/en/spoil/'));const old=main.querySelector('.view#members');if(old){old.after(goals,farming)}
