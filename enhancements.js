@@ -16,16 +16,40 @@ async function syncCatalog(){
  data.items=Array.isArray(a)?a:[];data.recipes=Array.isArray(b)?b:[];data.sets=Array.isArray(c)?c:[];data.materials=Array.isArray(d)?d:[];
  data.icons=icons&&typeof icons==='object'?icons:{byId:{},byName:{}};
  data.jewelry=Array.isArray(jewelry)?jewelry.filter(j=>['C','B','A'].includes(j.grade)):[];
- if(!data.items.length){data.items=await paged('items','id,name,grade,category,icon_url,source_url,verified');}
+ const [databaseItems,realRecipes,realIngredients]=await Promise.all([
+  paged('items','id,name,grade,category,game_item_id,icon_url,source_url,verified'),
+  paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified'),
+  paged('recipe_ingredients','recipe_id,item_id,quantity')
+ ]);
+ dbRecipes=realRecipes;dbIngredients=realIngredients;
+ const dbItemMap=new Map(databaseItems.map(i=>[Number(i.id),i]));
+ if(!data.items.length)data.items=databaseItems;
+ else{
+  const known=new Set(data.items.map(i=>[String(i.name||'').toLowerCase(),i.grade||''].join('|')));
+  for(const item of databaseItems){const k=[item.name.toLowerCase(),item.grade||''].join('|');if(!known.has(k)){data.items.push(item);known.add(k)}}
+ }
  if(!data.sets.length){data.sets=await paged('equipment_sets','id,name,grade,armor_type,image_url,set_bonus,verified');}
- if(!data.recipes.length){const rows=(await paged('recipes','id,output_item_id,output_quantity,success_rate,crafter_level,source_url,verified')).filter(r=>r.verified);data.recipes=rows.map(r=>({...r,name:'Recipe: '+(data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id)+' ('+Math.round(Number(r.success_rate)*100)+'%)',result:data.items.find(x=>x.id===r.output_item_id)?.name||'Ítem '+r.output_item_id,craft_level:r.crafter_level}));}
+ const officialCards=realRecipes.filter(r=>r.verified&&realIngredients.some(i=>i.recipe_id===r.id)).map(r=>{
+  const output=dbItemMap.get(Number(r.output_item_id));
+  const pct=Math.round(Number(r.success_rate)*100);
+  return {...r,name:'Recipe: '+(output?.name||'Ítem '+r.output_item_id)+' ('+pct+'%)',
+   result:output?.name||'Ítem '+r.output_item_id,grade:output?.grade||'NG',kind:output?.category,
+   ingredients:realIngredients.filter(i=>i.recipe_id===r.id).map(i=>({item_id:i.item_id,name:dbItemMap.get(Number(i.item_id))?.name||'Ítem '+i.item_id,quantity:Number(i.quantity)})),
+   craft_level:r.crafter_level,verified:true};
+ });
+ const verifiedKeys=new Set(officialCards.map(r=>[r.result.toLowerCase(),Math.round(Number(r.success_rate)*100),r.grade].join('|')));
+
  if(Array.isArray(featuredSets)){for(const set of featuredSets){const ix=data.sets.findIndex(x=>x.name.toLowerCase()===set.name.toLowerCase());if(ix>=0)data.sets[ix]={...data.sets[ix],...set};else data.sets.push(set)}}
  if(Array.isArray(guideSets)){for(const g of guideSets){const ix=data.sets.findIndex(x=>x.name.toLowerCase()===g.name.toLowerCase());if(ix<0)data.sets.push(g);else {const old=data.sets[ix];data.sets[ix]={...old,...g,parts:g.parts?.length?g.parts:(old.parts||[])};}}}
  if(Array.isArray(featured)){const known=new Set(data.recipes.map(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()));for(const recipe of featured){const k=recipe.name.toLowerCase().replace(/\s+/g,' ').trim();if(!known.has(k)){data.recipes.push(recipe);known.add(k)}else{const idx=data.recipes.findIndex(r=>(r.name||'').toLowerCase().replace(/\s+/g,' ').trim()===k);if(idx>=0&&!data.recipes[idx].ingredients?.length)data.recipes[idx]={...data.recipes[idx],...recipe}}}}
  const extra=[...(Array.isArray(moreArmor)?moreArmor:[]),...(Array.isArray(moreWeapons)?moreWeapons:[]),...(Array.isArray(jewelryRecipes)?jewelryRecipes:[])];
  const recipeKeys=new Set(data.recipes.map(r=>[r.result,r.success_rate,r.grade].join('|').toLowerCase()));
  for(const r of extra){const k=[r.result,r.success_rate,r.grade].join('|').toLowerCase();if(!recipeKeys.has(k)){data.recipes.push(r);recipeKeys.add(k)}}
- data.recipes=data.recipes.filter(r=>['C','B','A'].includes(r.grade));
+ data.recipes=[
+  ...officialCards.filter(r=>['C','B','A'].includes(r.grade)),
+  ...data.recipes.filter(r=>['C','B','A'].includes(r.grade)&&!verifiedKeys.has([String(r.result||'').toLowerCase(),Math.round(Number(r.success_rate||0)*100),r.grade].join('|')))
+   .map(r=>({...r,verified:false,ingredients:[]}))
+ ];
  data.sets=data.sets.filter(r=>['C','B','A'].includes(r.grade));
  data.items=data.items.filter(r=>r.grade!=='S');
   [goalItems,goalSets]=await Promise.all([paged('items','id,name,category'),paged('equipment_sets','id,name')]);
@@ -81,24 +105,21 @@ function jewelryCard(obj){
  right.append(node('h3',obj.name||obj.result||'Ítem'),node('div',kind==='recipes'?obj.result||'Resultado':kind==='sets'?({heavy:'Armadura pesada · Heavy',light:'Armadura ligera · Light',robe:'Túnica · Robe'}[obj.armor_type]||'Set de armadura'):obj.category||'Ítem',kind==='sets'?'set-label':'meta'));head.append(imgIcon(item),right);c.append(head);
  if(kind==='recipes'){
  c.append(node('div','Grado '+(obj.grade||'—')+' · '+(obj.success_rate==null?'':Math.round(obj.success_rate*100)+'% de éxito')+(obj.craft_level?' · Nivel '+obj.craft_level:'')+(obj.armor_type?' · '+obj.armor_type.toUpperCase():''),'meta'));
- if(!Array.isArray(obj.ingredients)||!obj.ingredients.length){c.append(node('div','Receta registrada · Ingredientes disponibles en la ficha LU4','meta'))}
+ c.append(node('div',obj.verified?'✓ Ingredientes LU4 cargados y revisados':'⚠ Receta pendiente de validar: no se usan estos datos para descontar','meta'));
+ if(!Array.isArray(obj.ingredients)||!obj.ingredients.length){c.append(node('div','Los ingredientes todavía no están verificados en la base de la CP.','meta'))}
  if(Array.isArray(obj.ingredients)&&obj.ingredients.length){
    const details=document.createElement('details');details.className='recipe-detail';
    const summary=node('summary','Ver '+obj.ingredients.length+' materiales para '+fmt(craftQty)+' crafteo(s)');
    details.append(summary);
    let complete=0;const ul=node('div','','source-list');for(const part of obj.ingredients){
-     const name=part.name.replace('Crystal (B-Grade)','Crystal: B Grade').replace('Crystal (A-Grade)','Crystal: A Grade');
-     const match=goalItems.find(i=>i.name?.toLowerCase()===name.toLowerCase()||i.name?.toLowerCase()===part.name.toLowerCase());
+     const match=goalItems.find(i=>i.id===part.item_id)||goalItems.find(i=>i.name?.toLowerCase()===part.name?.toLowerCase());
      const qty=match?balances.filter(b=>b.item_id===match.id).reduce((sum,b)=>sum+Number(b.quantity),0):0;
      if(qty>=part.quantity*craftQty)complete++;
      const need=part.quantity*craftQty;const item=node('div',part.name+' — necesito '+fmt(need)+' · CP: '+fmt(qty)+(qty<need?' · faltan '+fmt(need-qty):' · completo'),'recipe-ingredient');
      ul.append(item);
    }details.append(ul,node('small',complete+' / '+obj.ingredients.length+' tipos cubiertos','muted'));c.append(details)
  }
- if(obj.id){
-  const parts=dbIngredients.filter(x=>x.recipe_id===obj.id);
-  if(parts.length){const box=node('div','','source-list');for(const part of parts){const name=goalItems.find(i=>i.id===part.item_id)?.name||'Ítem '+part.item_id;const quantity=balances.filter(b=>b.item_id===part.item_id).reduce((s,b)=>s+Number(b.quantity),0);box.append(node('span',name+' ×'+fmt(part.quantity)+' · CP: '+fmt(quantity)))}c.append(box)}
- }
+ 
 }
  if(kind==='sets'){
  const bonus=obj.set_bonus;
