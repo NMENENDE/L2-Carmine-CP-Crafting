@@ -46,3 +46,12 @@
 .premium-card .set-benefits+.recipe-detail{border-top:1px solid #344258}
 .epic-label{color:#ffd38e;font-size:11px;letter-spacing:.3px}
 .premium-card:has(.epic-label){border-color:#80633a}
+
+/* Objetivos: estado y acciones siempre dentro del marco, en escritorio y móvil. */
+.goal-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;min-width:0;width:100%}
+.goal-title h3{min-width:0;flex:1 1 180px;margin:0;overflow-wrap:anywhere}
+.goal-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;min-width:0;max-width:100%;gap:9px;flex-wrap:wrap}
+.goal-status{display:inline-flex;justify-content:center;align-items:center;width:auto;height:auto;min-height:30px;max-width:100%;padding:6px 10px;white-space:normal;overflow-wrap:anywhere;line-height:1.25;text-align:center;flex:0 1 auto}
+.goal-delete{background:transparent;color:#f2b5b5;border:1px solid #86525c;border-radius:7px;padding:7px 10px;white-space:nowrap;font-size:12px;font-weight:600}
+.goal-delete:hover:not(:disabled){background:#572936}
+@media(max-width:540px){.goal-title{flex-direction:column;align-items:stretch}.goal-actions{justify-content:flex-start}.goal-status{min-height:28px}}
