@@ -188,67 +188,112 @@ function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();
  for(const obj of goalSets.filter(i=>i.id)){const o=node('option','Set: '+obj.name);o.value='set:'+obj.id;target.append(o)}
  for(const [v,t] of [['1','Prioridad alta'],['2','Prioridad media'],['3','Prioridad baja']]){const o=node('option',t);o.value=v;priority.append(o)}
  row.append(target,title,priority,submit);form.append(row);form.onsubmit=async e=>{e.preventDefault();if(!user||!party)return message('Primero ingresá a tu CP');const [kind,id]=target.value.split(':');if(!id)return message('Seleccioná un objetivo');const payload={party_id:party,title:title.value.trim(),priority:Number(priority.value),created_by:user.id};if(kind==='item')payload.target_item_id=Number(id);else payload.target_set_id=Number(id);const {error}=await db.from('crafting_projects').insert(payload);if(error)message(error.message);else{title.value='';await syncGoals()}};const list=node('div','', 'stack');panel.append(h,form,list);host.append(panel);host._list=list}
-async function syncGoals(){if(!user||!party||!$('goals'))return;if(!$('goals')._list)goalsUI();const {data:goals,error}=await db.from('crafting_projects').select('id,title,status,priority,target_item_id,target_set_id').eq('party_id',party).order('priority',{ascending:true});if(error){message(error.message);return}
- if(!dbRecipes.length){dbRecipes=await paged('recipes','id,output_item_id,output_quantity,success_rate,verified');dbIngredients=await paged('recipe_ingredients','recipe_id,item_id,quantity')}
- const list=$('goals')._list;list.replaceChildren();if(!goals?.length){list.append(node('div','Todavía no hay objetivos registrados.','premium-empty'));return}
- for(const g of goals){const box=node('div','','premium-box'),top=node('div','','goal-title'),status=node('span',({'pending':'Pendiente','gathering':'Reuniendo materiales','ready':'Listo','crafting':'Crafteando','completed':'Crafteado ✓','cancelled':'Cancelado'})[g.status]||'Pendiente','tag goal-status');
-const title=node('h3',g.title),actions=node('div','','goal-actions');actions.append(status);
-if(g.status!=='completed'){
- const remove=button('Eliminar',async()=>{
-  if(!confirm('¿Eliminar el objetivo «'+g.title+'» de la CP? Los materiales del inventario no se modificarán.'))return;
-  remove.disabled=true;
-  const {error}=await db.rpc('delete_cp_goal',{p_project:g.id});
-  if(error){remove.disabled=false;return message('No se pudo eliminar: '+error.message)}
-  message('Objetivo eliminado de la CP.');
-  await syncGoals();
- });
- remove.className='goal-delete';
- remove.setAttribute('aria-label','Eliminar objetivo '+g.title);
- actions.append(remove);
-}
-top.append(title,actions);box.append(top);
- if(g.target_item_id){const recipe=dbRecipes.find(r=>r.output_item_id===g.target_item_id&&r.verified);if(recipe){const ingredients=dbIngredients.filter(i=>i.recipe_id===recipe.id);let ok=0,needed=0;for(const ing of ingredients){const owned=balances.filter(b=>b.item_id===ing.item_id).reduce((s,b)=>s+Number(b.quantity),0);const available=Math.min(owned,ing.quantity);ok+=available;needed+=Number(ing.quantity);const item=data.items.find(i=>i.id===ing.item_id);box.append(node('div',(item?.name||'Ítem '+ing.item_id)+' · '+fmt(owned)+' / '+fmt(ing.quantity),'small muted'))}if(needed){const meter=node('div','','meter'),bar=node('span');bar.style.width=Math.round(100*ok/needed)+'%';meter.append(bar);box.append(meter,node('div',Math.round(100*ok/needed)+'% de ingredientes disponibles','small'));
-if(g.status!=='completed'&&g.status!=='cancelled'){
- const eligible=await db.from('inventory_locations').select('id,name,owner_user_id,character_id').eq('party_id',party).neq('name','Ubicación histórica (sin uso)');
- const ownedLocations=(eligible.data||[]).filter(l=>l.owner_user_id===user.id||l.owner_user_id===null);
- const place=document.createElement('select');place.setAttribute('aria-label','Ubicación donde guardar el objeto crafteado');
- for(const loc of ownedLocations){const opt=document.createElement('option');opt.value=loc.id;opt.textContent=loc.name;place.append(opt)}
- box.append(node('div','Destino del ítem crafteado:','small muted'),place);
- const ready=ok>=needed&&ownedLocations.length>0;
- const complete=button('✓ Confirmar crafteo exitoso',async()=>{
-  if(!party||!place.value)return message('Seleccioná un inventario propio o común para recibir el objeto.');
-  if(!confirm('¿Confirmás que el crafteo de '+g.title+' tuvo ÉXITO en el juego? Se descontarán ingredientes de TODA la CP y se registrará el ítem en '+place.selectedOptions[0].textContent+'.'))return;
-  complete.disabled=true;
-  const {error}=await db.rpc('complete_cp_craft',{p_project:g.id,p_output_location:place.value});
-  if(error){complete.disabled=false;return message('No se completó el craft: '+error.message)}
-  message('¡Craft registrado! Materiales descontados y objetivo completado.');
-  document.dispatchEvent(new Event('carmine-craft-completed'));
-  await sessionState();
- });
- complete.disabled=!ready;
- box.append(complete);
- if(!ready)box.append(node('div',ownedLocations.length?'Faltan ingredientes disponibles en la CP.':'Registrá un personaje propio para recibir el ítem.','muted small'));
-}
-}else box.append(node('div','Receta sin ingredientes cargados. No se permite descontar materiales.','muted small'))}else box.append(node('div','Receta no verificada: no es posible completar automáticamente ni descontar materiales hasta cargar una receta validada.','muted small'))}
- if(g.target_set_id){
-  const set=goalSets.find(x=>x.id===g.target_set_id);
-  box.append(node('div','Piezas del set '+(set?.name||'seleccionado')+' · para descontar materiales, creá objetivos de crafteo para cada pieza con receta verificada.','small muted'));
-  const {data:parts,error:partsError}=await db.from('set_pieces').select('item_id,required_quantity').eq('set_id',g.target_set_id);
-  if(partsError)box.append(node('div','No se pudo leer la composición del set.','muted small'));
-  else if(!parts?.length)box.append(node('div','Las piezas de este set aún no están disponibles.','muted small'));
-  else {
-    let complete=0;
-    for(const part of parts){
-      const item=goalItems.find(x=>x.id===part.item_id);
-      const owned=balances.filter(b=>b.item_id===part.item_id).reduce((n,b)=>n+Number(b.quantity),0);
-      if(owned>=part.required_quantity)complete++;
-      box.append(node('div',(item?.name||'Pieza '+part.item_id)+' · CP: '+fmt(owned)+' / '+fmt(part.required_quantity)+(owned>=part.required_quantity?' ✓':' · faltan '+fmt(part.required_quantity-owned)),'small muted'));
-    }
-    const meter=node('div','','meter'),fill=node('span');fill.style.width=Math.round(100*complete/parts.length)+'%';meter.append(fill);
-    box.append(meter,node('div',complete+' / '+parts.length+' piezas disponibles','small'));
-  }
+async function syncGoals(){
+ if(!user||!party||!$('goals'))return;
+ if(!$('goals')._list)goalsUI();
+ const {data:goals,error}=await db.from('crafting_projects')
+  .select('id,title,status,priority,target_item_id,target_set_id,selected_recipe_id')
+  .eq('party_id',party).order('priority',{ascending:true});
+ if(error)return message('Objetivos: '+error.message);
+ if(!dbRecipes.length){
+  dbRecipes=await paged('recipes','id,output_item_id,output_quantity,success_rate,verified');
+  dbIngredients=await paged('recipe_ingredients','recipe_id,item_id,quantity');
  }
- list.append(box)
+ const list=$('goals')._list;list.replaceChildren();
+ if(!goals?.length){list.append(node('div','Todavía no hay objetivos registrados.','premium-empty'));return}
+ for(const g of goals){
+  const box=node('div','','premium-box'),top=node('div','','goal-title');
+  const title=node('h3',g.title),actions=node('div','','goal-actions');
+  const statusText=({pending:'Pendiente',gathering:'Reuniendo materiales',ready:'Listo',crafting:'Crafteando',completed:'Crafteado ✓',cancelled:'Cancelado'})[g.status]||'Pendiente';
+  actions.append(node('span',statusText,'tag goal-status'));
+  if(g.status!=='completed'){
+   const remove=button('Eliminar',async()=>{
+    if(!confirm('¿Eliminar el objetivo «'+g.title+'»? No modificará los materiales de la CP.'))return;
+    remove.disabled=true;
+    const {error}=await db.rpc('delete_cp_goal',{p_project:g.id});
+    if(error){remove.disabled=false;return message('No se pudo eliminar: '+error.message)}
+    message('Objetivo eliminado');await syncGoals();
+   });
+   remove.className='goal-delete';actions.append(remove);
+  }
+  top.append(title,actions);box.append(top);
+  if(g.target_item_id){
+   const variants=dbRecipes.filter(r=>r.output_item_id===g.target_item_id&&r.verified&&dbIngredients.some(i=>i.recipe_id===r.id))
+    .sort((a,b)=>Number(b.success_rate)-Number(a.success_rate));
+   if(!variants.length){
+    box.append(node('p','Esta pieza todavía no tiene una receta con ingredientes verificados para LU4. No se pueden descontar materiales.','muted small'));
+   }else{
+    const picker=document.createElement('select');picker.setAttribute('aria-label','Variante de receta de '+g.title);
+    const hint=node('option','Elegí receta de crafteo');hint.value='';hint.disabled=true;picker.append(hint);
+    for(const r of variants){const option=node('option','Receta '+Math.round(Number(r.success_rate)*100)+'% · produce '+fmt(r.output_quantity));option.value=r.id;picker.append(option)}
+    picker.value=variants.some(v=>v.id===g.selected_recipe_id)?String(g.selected_recipe_id):'';
+    picker.disabled=g.status==='completed'||g.status==='cancelled';
+    picker.onchange=async()=>{
+     const {error}=await db.rpc('set_cp_goal_recipe',{p_project:g.id,p_recipe_id:Number(picker.value)});
+     if(error)return message(error.message);
+     message('Variante de receta guardada.');await syncGoals();
+    };
+    box.append(node('div','Variante de LU4:','small muted'),picker);
+    const recipe=variants.find(r=>r.id===g.selected_recipe_id);
+    if(!recipe){box.append(node('p','Elegí la variante (por ejemplo, 60% o 100%) para calcular los materiales de la CP.','muted small'))}
+    else{
+     const ingredients=dbIngredients.filter(i=>i.recipe_id===recipe.id);
+     let present=0,required=0;
+     for(const ing of ingredients){
+      const available=balances.filter(b=>b.item_id===ing.item_id).reduce((sum,b)=>sum+Number(b.quantity),0);
+      present+=Math.min(available,Number(ing.quantity));
+      required+=Number(ing.quantity);
+      const item=goalItems.find(i=>i.id===ing.item_id)||data.items.find(i=>i.id===ing.item_id);
+      box.append(node('div',(item?.name||'Ítem '+ing.item_id)+' · CP: '+fmt(available)+' / '+fmt(ing.quantity),'small muted'));
+     }
+     const meter=node('div','','meter'),fill=node('span');
+     fill.style.width=(required?Math.round(100*present/required):0)+'%';meter.append(fill);
+     box.append(meter,node('div',(required?Math.round(100*present/required):0)+'% de ingredientes disponibles · éxito '+Math.round(Number(recipe.success_rate)*100)+'%','small'));
+     if(g.status!=='completed'&&g.status!=='cancelled'){
+      const {data:eligible,error:locationError}=await db.from('inventory_locations')
+       .select('id,name,owner_user_id,character_id').eq('party_id',party).neq('name','Ubicación histórica (sin uso)');
+      if(locationError)message(locationError.message);
+      const owned=(eligible||[]).filter(l=>l.owner_user_id===user.id||l.owner_user_id===null);
+      const place=document.createElement('select');place.setAttribute('aria-label','Destino del ítem crafteado');
+      for(const loc of owned){const option=node('option',loc.name);option.value=loc.id;place.append(option)}
+      box.append(node('div','Ubicación donde registrar el objeto:','small muted'),place);
+      const finish=button('✓ Confirmar craft exitoso',async()=>{
+       if(!place.value)return message('Seleccioná el inventario de destino');
+       const rate=Math.round(Number(recipe.success_rate)*100);
+       if(!confirm('¿Confirmás que '+g.title+' salió exitoso usando la receta '+rate+'%? Se descontarán materiales de toda la CP.'))return;
+       finish.disabled=true;
+       const {error}=await db.rpc('complete_cp_craft',{p_project:g.id,p_output_location:place.value});
+       if(error){finish.disabled=false;return message('No se registró: '+error.message)}
+       message('Craft confirmado: materiales descontados y objetivo completado.');
+       document.dispatchEvent(new Event('carmine-craft-completed'));
+       await sessionState();
+      });
+      finish.disabled=present<required||!owned.length;
+      box.append(finish);
+      if(finish.disabled)box.append(node('div',owned.length?'Faltan materiales de la CP para esta variante.':'No hay destino de inventario propio o común.','muted small'));
+     }
+    }
+   }
+  }
+  if(g.target_set_id){
+   const set=goalSets.find(x=>x.id===g.target_set_id);
+   box.append(node('div','Set '+(set?.name||g.target_set_id)+' · registrá objetivos individuales de las piezas para consumir los materiales de sus recetas.','small muted'));
+   const {data:parts,error:partsError}=await db.from('set_pieces').select('item_id,required_quantity').eq('set_id',g.target_set_id);
+   if(partsError)box.append(node('div','Composición del set no disponible.','muted small'));
+   else if(parts?.length){
+    let completed=0;
+    for(const part of parts){
+     const item=goalItems.find(x=>x.id===part.item_id);
+     const owned=balances.filter(b=>b.item_id===part.item_id).reduce((n,b)=>n+Number(b.quantity),0);
+     if(owned>=part.required_quantity)completed++;
+     box.append(node('div',(item?.name||'Pieza '+part.item_id)+' · CP: '+fmt(owned)+' / '+fmt(part.required_quantity),'small muted'));
+    }
+    const meter=node('div','','meter'),fill=node('span');
+    fill.style.width=Math.round(100*completed/parts.length)+'%';meter.append(fill);
+    box.append(meter,node('div',completed+' / '+parts.length+' piezas disponibles','small'));
+   }
+  }
+  list.append(box);
  }
 }
 async function syncInventory(){if(!user||!party)return;const {data:bals,error}=await db.from('inventory_balances').select('item_id,quantity,location_id').eq('party_id',party);if(error){message('Inventario: '+error.message);return}balances=bals||[]}
