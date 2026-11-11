@@ -181,7 +181,7 @@ function paint(id){
  const back=button('← Anterior',()=>{cursor[id]--;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});back.disabled=cursor[id]===0;const next=button('Siguiente →',()=>{cursor[id]++;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});next.disabled=start+limit>=filtered.length;h.foot.append(back,next)
 }
 function renderAll(){for(const id of ['catalog','recipes','sets','jewelry']){if(!containers[id])containers[id]=mount(id);paint(id)}goalsUI()}
-async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user)return;const {data:members}=await db.from('party_members').select('party_id').eq('user_id',user.id).limit(1);party=members?.[0]?.party_id||null;await syncInventory();await syncGoals();paint('recipes')}
+async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user){party=null;balances=[];return}party=$('activeparty')?.value||null;if(!party){balances=[];return}await syncInventory();await syncGoals();paint('recipes')}
 function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();const panel=node('section','','panel'),h=node('h2','Objetivos de crafteo de la CP'),form=document.createElement('form'),row=node('div','','premium-toolbar'),target=document.createElement('select'),title=document.createElement('input'),priority=document.createElement('select'),submit=node('button','Crear objetivo','primary');submit.type='submit';title.placeholder='Nombre del objetivo';title.required=true;
  const first=node('option','Elegir objetivo: ítem o set');first.value='';target.append(first);
  for(const obj of goalItems.filter(i=>['weapon','armor','material'].includes(i.category)).slice(0,2000)){const o=node('option',obj.name);o.value='item:'+obj.id;target.append(o)}
@@ -224,7 +224,7 @@ function boot(){
  // Hide the older raw tables in favour of the premium catalogue component.
  for(const id of ['catalog','recipes','sets','jewelry']){const host=$(id);if(host){const legacy=node('div','','hide');while(host.firstChild)legacy.append(host.firstChild);host.append(legacy)}}
  renderAll();goalsUI();syncCatalog();
- db.auth.onAuthStateChange(()=>setTimeout(sessionState,500));sessionState()
+ db.auth.onAuthStateChange(()=>setTimeout(sessionState,500));document.addEventListener('carmine-party-changed',()=>sessionState());sessionState()
 }
 function openExtra(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('hide',v.id!==id));document.querySelectorAll('.nav button').forEach(v=>v.classList.toggle('active',v.dataset.extra===id));$('pagetitle').textContent=id==='goals'?'Objetivos de Crafteo':id==='jewelry'?'Joyería y Épicas':'Drop y Spoil';if(id==='goals')syncGoals();if(id==='jewelry')paint('jewelry')}
 setTimeout(boot,300);
