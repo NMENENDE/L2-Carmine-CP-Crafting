@@ -191,11 +191,33 @@ function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();
 async function syncGoals(){if(!user||!party||!$('goals'))return;if(!$('goals')._list)goalsUI();const {data:goals,error}=await db.from('crafting_projects').select('id,title,status,priority,target_item_id,target_set_id').eq('party_id',party).order('priority',{ascending:true});if(error){message(error.message);return}
  if(!dbRecipes.length){dbRecipes=await paged('recipes','id,output_item_id,output_quantity,success_rate,verified');dbIngredients=await paged('recipe_ingredients','recipe_id,item_id,quantity')}
  const list=$('goals')._list;list.replaceChildren();if(!goals?.length){list.append(node('div','Todavía no hay objetivos registrados.','premium-empty'));return}
- for(const g of goals){const box=node('div','','premium-box'),top=node('div','','goal-title');top.append(node('h3',g.title),node('span',g.status||'Activo','tag'));box.append(top);
- if(g.target_item_id){const recipe=dbRecipes.find(r=>r.output_item_id===g.target_item_id&&r.verified);if(recipe){const ingredients=dbIngredients.filter(i=>i.recipe_id===recipe.id);let ok=0,needed=0;for(const ing of ingredients){const owned=balances.filter(b=>b.item_id===ing.item_id).reduce((s,b)=>s+Number(b.quantity),0);const available=Math.min(owned,ing.quantity);ok+=available;needed+=Number(ing.quantity);const item=data.items.find(i=>i.id===ing.item_id);box.append(node('div',(item?.name||'Ítem '+ing.item_id)+' · '+fmt(owned)+' / '+fmt(ing.quantity),'small muted'))}if(needed){const meter=node('div','','meter'),bar=node('span');bar.style.width=Math.round(100*ok/needed)+'%';meter.append(bar);box.append(meter,node('div',Math.round(100*ok/needed)+'% de ingredientes disponibles','small'))}else box.append(node('div','Receta sin ingredientes cargados.','muted small'))}else box.append(node('div','Objetivo registrado. Consultá la ficha del ítem para su receta.','muted small'))}
+ for(const g of goals){const box=node('div','','premium-box'),top=node('div','','goal-title');top.append(node('h3',g.title),node('span',({'pending':'Pendiente','gathering':'Reuniendo materiales','ready':'Listo','crafting':'Crafteando','completed':'Crafteado ✓','cancelled':'Cancelado'})[g.status]||'Pendiente','tag'));box.append(top);
+ if(g.target_item_id){const recipe=dbRecipes.find(r=>r.output_item_id===g.target_item_id&&r.verified);if(recipe){const ingredients=dbIngredients.filter(i=>i.recipe_id===recipe.id);let ok=0,needed=0;for(const ing of ingredients){const owned=balances.filter(b=>b.item_id===ing.item_id).reduce((s,b)=>s+Number(b.quantity),0);const available=Math.min(owned,ing.quantity);ok+=available;needed+=Number(ing.quantity);const item=data.items.find(i=>i.id===ing.item_id);box.append(node('div',(item?.name||'Ítem '+ing.item_id)+' · '+fmt(owned)+' / '+fmt(ing.quantity),'small muted'))}if(needed){const meter=node('div','','meter'),bar=node('span');bar.style.width=Math.round(100*ok/needed)+'%';meter.append(bar);box.append(meter,node('div',Math.round(100*ok/needed)+'% de ingredientes disponibles','small'));
+if(g.status!=='completed'&&g.status!=='cancelled'){
+ const eligible=await db.from('inventory_locations').select('id,name,owner_user_id,character_id').eq('party_id',party).neq('name','Ubicación histórica (sin uso)');
+ const ownedLocations=(eligible.data||[]).filter(l=>l.owner_user_id===user.id||l.owner_user_id===null);
+ const place=document.createElement('select');place.setAttribute('aria-label','Ubicación donde guardar el objeto crafteado');
+ for(const loc of ownedLocations){const opt=document.createElement('option');opt.value=loc.id;opt.textContent=loc.name;place.append(opt)}
+ box.append(node('div','Destino del ítem crafteado:','small muted'),place);
+ const ready=ok>=needed&&ownedLocations.length>0;
+ const complete=button('✓ Confirmar crafteo exitoso',async()=>{
+  if(!party||!place.value)return message('Seleccioná un inventario propio o común para recibir el objeto.');
+  if(!confirm('¿Confirmás que el crafteo de '+g.title+' tuvo ÉXITO en el juego? Se descontarán ingredientes de TODA la CP y se registrará el ítem en '+place.selectedOptions[0].textContent+'.'))return;
+  complete.disabled=true;
+  const {error}=await db.rpc('complete_cp_craft',{p_project:g.id,p_output_location:place.value});
+  if(error){complete.disabled=false;return message('No se completó el craft: '+error.message)}
+  message('¡Craft registrado! Materiales descontados y objetivo completado.');
+  document.dispatchEvent(new Event('carmine-craft-completed'));
+  await sessionState();
+ });
+ complete.disabled=!ready;
+ box.append(complete);
+ if(!ready)box.append(node('div',ownedLocations.length?'Faltan ingredientes disponibles en la CP.':'Registrá un personaje propio para recibir el ítem.','muted small'));
+}
+}else box.append(node('div','Receta sin ingredientes cargados. No se permite descontar materiales.','muted small'))}else box.append(node('div','Receta no verificada: no es posible completar automáticamente ni descontar materiales hasta cargar una receta validada.','muted small'))}
  if(g.target_set_id){
   const set=goalSets.find(x=>x.id===g.target_set_id);
-  box.append(node('div','Piezas del set '+(set?.name||'seleccionado'),'small muted'));
+  box.append(node('div','Piezas del set '+(set?.name||'seleccionado')+' · para descontar materiales, creá objetivos de crafteo para cada pieza con receta verificada.','small muted'));
   const {data:parts,error:partsError}=await db.from('set_pieces').select('item_id,required_quantity').eq('set_id',g.target_set_id);
   if(partsError)box.append(node('div','No se pudo leer la composición del set.','muted small'));
   else if(!parts?.length)box.append(node('div','Las piezas de este set aún no están disponibles.','muted small'));
