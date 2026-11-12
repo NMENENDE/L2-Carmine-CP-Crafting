@@ -237,6 +237,22 @@ async function renderCraftReadiness(){
    fill.style.width=Math.round(100*complete/parts.length)+'%';meter.append(fill);
    row.append(meter,node('p',ready?'✓ Set completo: listo para finalizar':complete+' de '+parts.length+' piezas completas',ready?'ingredient-complete':'muted small'));
    if(ready)alerts.append(node('div','✓ '+g.title+' — todas las piezas del set están disponibles','ingredient-complete'));
+   const missing=parts.filter(p=>(totals.get(Number(p.item_id))||0)<Number(p.required_quantity));
+   for(const part of missing){
+    const missingQty=Number(part.required_quantity)-(totals.get(Number(part.item_id))||0);
+    const recipes=dbRecipes.filter(r=>Number(r.output_item_id)===Number(part.item_id)&&r.verified&&dbIngredients.some(i=>Number(i.recipe_id)===Number(r.id))).sort((a,b)=>Number(b.success_rate)-Number(a.success_rate));
+    const recipe=recipes[0];
+    if(!recipe){row.append(node('p','Pieza '+part.item_id+': no hay receta verificada para calcular materiales.','muted small'));continue}
+    const output=Math.max(1,Number(recipe.output_quantity)||1),attempts=Math.ceil(missingQty/output);
+    const heading=node('div','Para fabricar '+fmt(missingQty)+' unidad(es) de '+(goalItems.find(i=>Number(i.id)===Number(part.item_id))?.name||'pieza '+part.item_id)+' · '+fmt(attempts)+' intento(s) de receta','small');
+    row.append(heading);
+    for(const ing of dbIngredients.filter(i=>Number(i.recipe_id)===Number(recipe.id))){
+     const need=Number(ing.quantity)*attempts,have=totals.get(Number(ing.item_id))||0;
+     const name=goalItems.find(i=>Number(i.id)===Number(ing.item_id))?.name||data.items.find(i=>Number(i.id)===Number(ing.item_id))?.name||'Ítem '+ing.item_id;
+     row.append(node('div','↳ '+name+': '+fmt(have)+' / '+fmt(need)+(have<need?' · faltan '+fmt(need-have):' · completo'),have>=need?'small ingredient-complete':'small muted'));
+    }
+   }
+   if(missing.length)row.append(node('p','Cálculo orientativo por receta verificada; los intentos pueden fallar y varias piezas pueden compartir materiales.','muted small'));
    host.append(row);continue;
   }
   const variants=dbRecipes.filter(r=>Number(r.output_item_id)===Number(g.target_item_id)&&r.verified&&dbIngredients.some(i=>i.recipe_id===r.id));
