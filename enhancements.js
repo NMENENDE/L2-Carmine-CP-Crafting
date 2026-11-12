@@ -222,7 +222,23 @@ async function renderCraftReadiness(){
  for(const b of balances)totals.set(Number(b.item_id),(totals.get(Number(b.item_id))||0)+Number(b.quantity||0));
  for(const g of active){
   const row=node('div','','goal-row'),title=node('h3',g.title);row.append(title);
-  if(g.target_set_id){row.append(node('p','Set: revisá las piezas necesarias en Objetivos.','muted small'));host.append(row);continue}
+  if(g.target_set_id){
+   const {data:parts,error:partsError}=await db.from('set_pieces').select('item_id,required_quantity').eq('set_id',g.target_set_id);
+   if(current!==party)return;
+   if(partsError||!parts?.length){row.append(node('p','No se pudo verificar la composición del set.','muted small'));host.append(row);continue}
+   let complete=0;
+   for(const part of parts){
+    const owned=totals.get(Number(part.item_id))||0,required=Number(part.required_quantity);
+    if(owned>=required)complete++;
+    const name=goalItems.find(i=>Number(i.id)===Number(part.item_id))?.name||data.items.find(i=>Number(i.id)===Number(part.item_id))?.name||'Pieza '+part.item_id;
+    row.append(node('div',name+': '+fmt(owned)+' / '+fmt(required),owned>=required?'small ingredient-complete':'small muted'));
+   }
+   const ready=complete===parts.length,meter=node('div','','meter'),fill=node('span');
+   fill.style.width=Math.round(100*complete/parts.length)+'%';meter.append(fill);
+   row.append(meter,node('p',ready?'✓ Set completo: listo para finalizar':complete+' de '+parts.length+' piezas completas',ready?'ingredient-complete':'muted small'));
+   if(ready)alerts.append(node('div','✓ '+g.title+' — todas las piezas del set están disponibles','ingredient-complete'));
+   host.append(row);continue;
+  }
   const variants=dbRecipes.filter(r=>Number(r.output_item_id)===Number(g.target_item_id)&&r.verified&&dbIngredients.some(i=>i.recipe_id===r.id));
   const recipe=variants.find(r=>Number(r.id)===Number(g.selected_recipe_id))||variants.sort((a,b)=>Number(b.success_rate)-Number(a.success_rate))[0];
   if(!recipe){row.append(node('p','Sin receta verificada disponible.','muted small'));host.append(row);continue}
