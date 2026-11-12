@@ -226,7 +226,7 @@ async function syncGoals(){
   const box=node('div','','premium-box'),top=node('div','','goal-title');
   const title=node('h3',g.title),actions=node('div','','goal-actions');
   const statusText=({pending:'Pendiente',gathering:'Reuniendo materiales',ready:'Listo',crafting:'Crafteando',completed:'Crafteado ✓',cancelled:'Cancelado'})[g.status]||'Pendiente';
-  actions.append(node('span',statusText,'tag goal-status'));
+  actions.append(node('span',statusText,'tag goal-status'+(g.status==='completed'?' ingredient-complete':'')));
   if(g.status!=='completed'){
    const remove=button('Eliminar',async()=>{
     if(!confirm('¿Eliminar el objetivo «'+g.title+'»? No modificará los materiales de la CP.'))return;
@@ -265,11 +265,11 @@ async function syncGoals(){
       present+=Math.min(available,Number(ing.quantity));
       required+=Number(ing.quantity);
       const item=goalItems.find(i=>i.id===ing.item_id)||data.items.find(i=>i.id===ing.item_id);
-      box.append(node('div',(item?.name||'Ítem '+ing.item_id)+' · CP: '+fmt(available)+' / '+fmt(ing.quantity),'small muted'));
+      box.append(node('div',(available>=Number(ing.quantity)?'✓ ':'')+(item?.name||'Ítem '+ing.item_id)+' · CP: '+fmt(available)+' / '+fmt(ing.quantity),available>=Number(ing.quantity)?'small ingredient-complete':'small muted'));
      }
      const meter=node('div','','meter'),fill=node('span');
      fill.style.width=(required?Math.round(100*present/required):0)+'%';meter.append(fill);
-     box.append(meter,node('div',(required?Math.round(100*present/required):0)+'% de ingredientes disponibles · éxito '+Math.round(Number(recipe.success_rate)*100)+'%','small'));
+     box.append(meter,node('div',(required?Math.round(100*present/required):0)+'% de ingredientes disponibles · éxito '+Math.round(Number(recipe.success_rate)*100)+'%',required>0&&present===required?'small ingredient-complete':'small'));if(required>0&&present===required&&g.status!=='completed')box.append(node('div','✓ Materiales completos · objetivo listo para confirmar el crafteo','ingredient-complete'));
      if(g.status!=='completed'&&g.status!=='cancelled'){
       const {data:eligible,error:locationError}=await db.from('inventory_locations')
        .select('id,name,owner_user_id,character_id').eq('party_id',party).neq('name','Ubicación histórica (sin uso)');
@@ -307,11 +307,11 @@ async function syncGoals(){
      const item=goalItems.find(x=>x.id===part.item_id);
      const owned=balances.filter(b=>b.item_id===part.item_id).reduce((n,b)=>n+Number(b.quantity),0);
      if(owned>=part.required_quantity)completed++;
-     box.append(node('div',(item?.name||'Pieza '+part.item_id)+' · CP: '+fmt(owned)+' / '+fmt(part.required_quantity),'small muted'));
+     box.append(node('div',(owned>=part.required_quantity?'✓ ':'')+(item?.name||'Pieza '+part.item_id)+' · CP: '+fmt(owned)+' / '+fmt(part.required_quantity),owned>=part.required_quantity?'small ingredient-complete':'small muted'));
     }
     const meter=node('div','','meter'),fill=node('span');
     fill.style.width=Math.round(100*completed/parts.length)+'%';meter.append(fill);
-    box.append(meter,node('div',completed+' / '+parts.length+' piezas disponibles','small'));
+    box.append(meter,node('div',completed+' / '+parts.length+' piezas disponibles',completed===parts.length?'small ingredient-complete':'small'));if(completed===parts.length&&g.status!=='completed'&&g.status!=='cancelled'){box.append(node('div','✓ Set completo en el inventario de la CP','ingredient-complete'));const done=button('✓ Finalizar objetivo del set',async()=>{if(!confirm('¿Marcar el set «'+g.title+'» como finalizado? Las piezas seguirán en el inventario y no se descontarán otra vez.'))return;done.disabled=true;const {error}=await db.rpc('complete_cp_set',{p_project:g.id});if(error){done.disabled=false;return message(error.message)}message('Objetivo del set finalizado y registrado en el historial.');document.dispatchEvent(new Event('carmine-craft-completed'));await sessionState()});box.append(done)}
    }
   }
   list.append(box);
