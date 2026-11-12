@@ -115,9 +115,9 @@ function jewelryCard(obj){
      const match=goalItems.find(i=>i.id===part.item_id)||goalItems.find(i=>i.name?.toLowerCase()===part.name?.toLowerCase());
      const qty=match?balances.filter(b=>b.item_id===match.id).reduce((sum,b)=>sum+Number(b.quantity),0):0;
      if(qty>=part.quantity*craftQty)complete++;
-     const need=part.quantity*craftQty;const item=node('div',part.name+' — necesito '+fmt(need)+' · CP: '+fmt(qty)+(qty<need?' · faltan '+fmt(need-qty):' · completo'),'recipe-ingredient');
+     const need=part.quantity*craftQty;const covered=qty>=need;const item=node('div',(covered?'✓ ':'')+part.name+' — necesito '+fmt(need)+' · CP: '+fmt(qty)+(covered?' · completo':' · faltan '+fmt(need-qty)),'recipe-ingredient'+(covered?' ingredient-complete':''));
      ul.append(item);
-   }details.append(ul,node('small',complete+' / '+obj.ingredients.length+' tipos cubiertos','muted'));c.append(details)
+   }const allReady=complete===obj.ingredients.length;summary.classList.toggle('ingredient-complete',allReady);if(allReady&&obj.verified)c.append(node('div','✓ Materiales completos en la CP · listo para intentar craftear','ingredient-complete'));details.append(ul,node('small',complete+' / '+obj.ingredients.length+' tipos cubiertos',allReady?'ingredient-complete':'muted'));c.append(details)
  }
  
 }
@@ -331,3 +331,5 @@ function boot(){
 }
 function openExtra(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('hide',v.id!==id));document.querySelectorAll('.nav button').forEach(v=>v.classList.toggle('active',v.dataset.extra===id));$('pagetitle').textContent=id==='goals'?'Objetivos de Crafteo':id==='jewelry'?'Joyería y Épicas':'Drop y Spoil';if(id==='goals')syncGoals();if(id==='jewelry')paint('jewelry')}
 setTimeout(boot,300);
+
+// Los materiales completos se resaltan también en las listas desplegables.
