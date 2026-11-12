@@ -217,6 +217,7 @@ async function renderCraftReadiness(){
  const active=(goals||[]).filter(g=>!['completed','cancelled'].includes(g.status));
  host.append(node('p',(goals||[]).filter(g=>g.status==='completed').length+' finalizados · '+active.length+' activos','muted small'));
  if(!active.length){host.append(node('p','Todavía no hay objetivos activos.','muted'));return}
+ const alerts=node('div','','stack');alerts.id='craft-alerts';host.append(node('h3','Avisos de fabricación'),alerts);
  const totals=new Map();
  for(const b of balances)totals.set(Number(b.item_id),(totals.get(Number(b.item_id))||0)+Number(b.quantity||0));
  for(const g of active){
@@ -234,9 +235,11 @@ async function renderCraftReadiness(){
    row.append(node('div',name+': '+fmt(owned)+' / '+fmt(needed),owned>=needed?'small ingredient-complete':'small muted'));
   }
   const ready=ingredients.length>0&&complete===ingredients.length;
-  const meter=node('div','','meter'),fill=node('span');fill.style.width=Math.round(100*complete/ingredients.length)+'%';meter.append(fill);row.append(meter,node('p',ready?'✓ Materiales completos: listo para intentar craftear':complete+' de '+ingredients.length+' materiales completos',ready?'ingredient-complete':'muted small'));
+  if(ready)alerts.append(node('div','✓ '+g.title+' — materiales completos, listo para intentar craftear','ingredient-complete'));
+  const meter=node('div','','meter'),fill=node('span');fill.style.width=Math.round(100*complete/Math.max(1,ingredients.length))+'%';meter.append(fill);row.append(meter,node('p',ready?'✓ Materiales completos: listo para intentar craftear':complete+' de '+ingredients.length+' materiales completos',ready?'ingredient-complete':'muted small'));
   host.append(row);
  }
+ if(!alerts.children.length)alerts.append(node('p','No hay objetivos con materiales completos por ahora.','muted small'));
  const go=button('Abrir objetivos',()=>openExtra('goals'));go.className='outline';host.append(go);
 }
 function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();const panel=node('section','','panel'),h=node('h2','Objetivos de crafteo de la CP'),form=document.createElement('form'),row=node('div','','premium-toolbar'),target=document.createElement('select'),title=document.createElement('input'),priority=document.createElement('select'),submit=node('button','Crear objetivo','primary');submit.type='submit';title.placeholder='Nombre del objetivo';title.required=true;
