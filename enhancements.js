@@ -202,13 +202,49 @@ function paint(id){
  const back=button('← Anterior',()=>{cursor[id]--;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});back.disabled=cursor[id]===0;const next=button('Siguiente →',()=>{cursor[id]++;paint(id);h.grid.scrollIntoView({behavior:'smooth',block:'start'})});next.disabled=start+limit>=filtered.length;h.foot.append(back,next)
 }
 function renderAll(){for(const id of ['catalog','recipes','sets','jewelry']){if(!containers[id])containers[id]=mount(id);paint(id)}goalsUI()}
-async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user){party=null;balances=[];return}party=$('activeparty')?.value||null;if(!party){balances=[];return}await syncInventory();await syncGoals();paint('recipes')}
+async function sessionState(){const {data:{user:u}}=await db.auth.getUser();user=u;if(!user){party=null;balances=[];return}party=$('activeparty')?.value||null;if(!party){balances=[];return}await syncInventory();await syncGoals();paint('recipes');await renderCraftReadiness()}
+
+// Panel inteligente: consulta exclusivamente los objetivos e inventario de la CP activa.
+async function renderCraftReadiness(){
+ let host=$('craft-readiness');
+ if(!host){host=node('div','','panel');host.id='craft-readiness';const dashboard=$('dashboard');if(!dashboard)return;dashboard.append(host)}
+ host.replaceChildren(node('h2','Objetivos y materiales de mi CP'));
+ const current=party;
+ if(!user||!current){host.append(node('p','Ingresá y seleccioná una CP para consultar sus objetivos.','muted'));return}
+ const {data:goals,error}=await db.from('crafting_projects').select('id,title,status,target_item_id,target_set_id,selected_recipe_id').eq('party_id',current);
+ if(current!==party)return;
+ if(error){host.append(node('p','No se pudieron consultar los objetivos de esta CP.','error'));return}
+ const active=(goals||[]).filter(g=>!['completed','cancelled'].includes(g.status));
+ host.append(node('p',(goals||[]).filter(g=>g.status==='completed').length+' finalizados · '+active.length+' activos','muted small'));
+ if(!active.length){host.append(node('p','Todavía no hay objetivos activos.','muted'));return}
+ const totals=new Map();
+ for(const b of balances)totals.set(Number(b.item_id),(totals.get(Number(b.item_id))||0)+Number(b.quantity||0));
+ for(const g of active){
+  const row=node('div','','goal-row'),title=node('h3',g.title);row.append(title);
+  if(g.target_set_id){row.append(node('p','Set: revisá las piezas necesarias en Objetivos.','muted small'));host.append(row);continue}
+  const variants=dbRecipes.filter(r=>Number(r.output_item_id)===Number(g.target_item_id)&&r.verified&&dbIngredients.some(i=>i.recipe_id===r.id));
+  const recipe=variants.find(r=>Number(r.id)===Number(g.selected_recipe_id))||variants.sort((a,b)=>Number(b.success_rate)-Number(a.success_rate))[0];
+  if(!recipe){row.append(node('p','Sin receta verificada disponible.','muted small'));host.append(row);continue}
+  const ingredients=dbIngredients.filter(i=>Number(i.recipe_id)===Number(recipe.id));
+  let complete=0;
+  for(const ing of ingredients){
+   const owned=totals.get(Number(ing.item_id))||0,needed=Number(ing.quantity);
+   if(owned>=needed)complete++;
+   const name=goalItems.find(i=>Number(i.id)===Number(ing.item_id))?.name||data.items.find(i=>Number(i.id)===Number(ing.item_id))?.name||'Ítem '+ing.item_id;
+   row.append(node('div',name+': '+fmt(owned)+' / '+fmt(needed),owned>=needed?'small ingredient-complete':'small muted'));
+  }
+  const ready=ingredients.length>0&&complete===ingredients.length;
+  const meter=node('div','','meter'),fill=node('span');fill.style.width=Math.round(100*complete/ingredients.length)+'%';meter.append(fill);row.append(meter,node('p',ready?'✓ Materiales completos: listo para intentar craftear':complete+' de '+ingredients.length+' materiales completos',ready?'ingredient-complete':'muted small'));
+  host.append(row);
+ }
+ const go=button('Abrir objetivos',()=>openExtra('goals'));go.className='outline';host.append(go);
+}
 function goalsUI(){const host=$('goals');if(!host)return;host.replaceChildren();const panel=node('section','','panel'),h=node('h2','Objetivos de crafteo de la CP'),form=document.createElement('form'),row=node('div','','premium-toolbar'),target=document.createElement('select'),title=document.createElement('input'),priority=document.createElement('select'),submit=node('button','Crear objetivo','primary');submit.type='submit';title.placeholder='Nombre del objetivo';title.required=true;
  const first=node('option','Elegir objetivo: ítem o set');first.value='';target.append(first);
  for(const obj of goalItems.filter(i=>['weapon','armor','material'].includes(i.category)).slice(0,2000)){const o=node('option',obj.name);o.value='item:'+obj.id;target.append(o)}
  for(const obj of goalSets.filter(i=>i.id)){const o=node('option','Set: '+obj.name);o.value='set:'+obj.id;target.append(o)}
  for(const [v,t] of [['1','Prioridad alta'],['2','Prioridad media'],['3','Prioridad baja']]){const o=node('option',t);o.value=v;priority.append(o)}
- row.append(target,title,priority,submit);form.append(row);form.onsubmit=async e=>{e.preventDefault();if(!user||!party)return message('Primero ingresá a tu CP');const [kind,id]=target.value.split(':');if(!id)return message('Seleccioná un objetivo');const payload={party_id:party,title:title.value.trim(),priority:Number(priority.value),created_by:user.id};if(kind==='item')payload.target_item_id=Number(id);else payload.target_set_id=Number(id);const {error}=await db.from('crafting_projects').insert(payload);if(error)message(error.message);else{title.value='';await syncGoals()}};const list=node('div','', 'stack');panel.append(h,form,list);host.append(panel);host._list=list}
+ row.append(target,title,priority,submit);form.append(row);form.onsubmit=async e=>{e.preventDefault();if(!user||!party)return message('Primero ingresá a tu CP');const [kind,id]=target.value.split(':');if(!id)return message('Seleccioná un objetivo');const payload={party_id:party,title:title.value.trim(),priority:Number(priority.value),created_by:user.id};if(kind==='item')payload.target_item_id=Number(id);else payload.target_set_id=Number(id);const {error}=await db.from('crafting_projects').insert(payload);if(error)message(error.message);else{title.value='';await syncGoals();await renderCraftReadiness()}};const list=node('div','', 'stack');panel.append(h,form,list);host.append(panel);host._list=list}
 async function syncGoals(){
  if(!user||!party||!$('goals'))return;
  if(!$('goals')._list)goalsUI();
