@@ -55,3 +55,7 @@
 .goal-delete{background:transparent;color:#f2b5b5;border:1px solid #86525c;border-radius:7px;padding:7px 10px;white-space:nowrap;font-size:12px;font-weight:600}
 .goal-delete:hover:not(:disabled){background:#572936}
 @media(max-width:540px){.goal-title{flex-direction:column;align-items:stretch}.goal-actions{justify-content:flex-start}.goal-status{min-height:28px}}
+
+/* Estado de materiales y recetas completos en el inventario compartido */
+.ingredient-complete{color:#75e4a5!important;font-weight:700!important}
+.recipe-ingredient.ingredient-complete{background:rgba(38,160,93,.12);border-left:3px solid #55d88c;border-radius:5px;padding:7px 10px}
